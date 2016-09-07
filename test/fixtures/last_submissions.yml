@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  problem: 1
+  verdict: 1
+  lang: 1
+  time: 1
+  submit_time: 1
+
+two:
+  user_id: 1
+  problem: 1
+  verdict: 1
+  lang: 1
+  time: 1
+  submit_time: 1

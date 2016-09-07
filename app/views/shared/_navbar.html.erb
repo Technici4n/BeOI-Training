@@ -1,0 +1,66 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="/"><img class="navbar-logo" src="/pictures/logoBeoi.png" alt="BeOI Training"/> <span style="color: #337b9c;">BeOI</span> <span style="color: #235064;">Training</span></a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav navbar-right">
+			<li><a href="/forum">Forum</a></li>
+			
+			<!-- Test if a user is connected -->
+			<% if User.exists?(id: session[:user_id]) %>
+				<!-- Show user menu -->
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= User.find(session[:user_id]).username %><span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/users/profile">Profile</a></li>
+						<li><a href="#">NYI</a></li>
+						<li><a href="#">NYI</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/users/logout">Log Out</a></li>
+						<% if User.find(session[:user_id]).admin %>
+							<li role="separator" class="divider"></li>
+							<li><a href="/admin">Admin tools</a></li>
+						<% end %>
+				  </ul>
+				</li>
+			<% else %>
+				<!-- Show login menu -->
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log In</a>
+					<ul class="dropdown-menu">
+						<li style="padding: 15px; padding-bottm: 5px; padding-top: 10px;">
+							<%= form_tag :action => "login_attempt", :controller => "users", :method => :post do %>
+							
+								<div class="form-group">
+									<%= label_tag "Username" %><br/>
+									<%= text_field_tag :username_or_email, "", class: "form-control" %>
+								</div>
+									
+								<div class="form-group">
+									<%= label_tag "Password" %><br/>
+									<%= password_field_tag :login_password, "", class: "form-control" %>
+								</div>
+								
+								<%= submit_tag "Log in", class: "btn btn-default btn-primary", style: "width:200px;" %>
+							<% end %>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/users/signup">Sign Up</a></li>
+					</ul>
+				</li>
+			<% end %>
+			
+			</ul>
+		</div>
+	</div>
+</nav>

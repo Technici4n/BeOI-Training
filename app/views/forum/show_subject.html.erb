@@ -1,0 +1,18 @@
+<ol class="breadcrumb" style="font-size:18px;">
+	<li><a href="/forum">Forum</a></li>
+	<li><%= link_to @subject.subforum.title, "/forum/" + @subject.subforum.id.to_s %></li>
+	<li class="active" style="color:#235064;"><strong><%= @subject.title %></strong></li>
+</ol>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:22px">
+		<span style="color:#235064;"><strong><%= @subject.title %></strong></span>
+	</div>
+	<div class="panel-body">
+		<%= render "show_messages" %>
+	</div>
+</div>
+
+<% if session[:user_id] %>
+	<center><%= link_to "New Message", "/forum/subjects/#{@subject.id}/new", class: "btn btn-lg btn-primary btn-gray", style: "margin: 0 0 10px 0;" %></button></center>
+<% end %>

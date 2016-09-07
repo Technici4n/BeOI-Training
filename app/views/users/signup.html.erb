@@ -1,0 +1,46 @@
+<h1>Sign Up</h1>
+
+<%= form_for @user, url: {action: "create"} do |f| %>
+	
+	<% if @user.errors.any? %>
+		<div id="error_explanation">
+			<h2>
+				<%= pluralize(@user.errors.count, "error") %> made you unable to sign up:
+			</h2>
+			
+			<ul>
+				<% @user.errors.full_messages.each do |err| %>
+					<li><%= err %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+		
+	<div class="form-group">
+		<%= f.label "Username" %><br/>
+		<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: "Username" %>
+	</div>
+	
+	<div class="form-group">
+		<%= f.label "UVa Onlinejudge username" %><br/>
+		<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: "UVa username" %>
+	</div>
+	
+	<div class="form-group">
+		<%= f.label "Email Address" %><br/>
+		<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: "Email" %>
+	</div>
+	
+	<div class="form-group">
+		<%= f.label "Password" %><br/>
+		<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: "Password" %>
+	</div>
+	
+	<div class="form-group">
+		<%= f.label "Password Confirmation" %><br/>
+		<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: "Password confirmation" %>
+	</div>
+	
+	<%= f.submit class: "btn btn-default btn-primary", style: "width:200px;" %>
+
+<% end %>

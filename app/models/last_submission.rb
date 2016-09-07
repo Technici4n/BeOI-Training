@@ -1,0 +1,2 @@
+class LastSubmission < ApplicationRecord
+end

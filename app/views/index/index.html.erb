@@ -1,0 +1,53 @@
+<% require "index_helper" %>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Top solvers (last 2 weeks)</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>User</th>
+					<th colspan="2">Accepted UVa submissions</th>
+				</tr>
+			</thead>
+			<tbody id="topsolvers">
+			</tbody>
+		</table>
+		<div id="chart-1" style="height: 300px;">
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Last submissions</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>User</th>
+					<th>Problem</th>
+					<th>Verdict</th>
+					<th>Language</th>
+					<th>Time</th>
+					<th>Submit Time</th>
+				</tr>
+			</thead>
+			<tbody id="lastsubmissions">
+			</tbody>
+		</table>
+		<center><button onclick="append_submissions(20);" class="btn btn-lg btn-primary btn-gray" style="margin: 0 0 10px 0;">Show 20 More</button>
+	</div>
+</div>
+<%= javascript_tag "var usernames = #{IndexHelper.format_users_to_js};" %>
+<% if User.exists?(id: session[:user_id]) %>
+	<%= javascript_tag "var current_user = '#{User.find(session[:user_id]).uva}';" %>
+<% else %>
+	<%= javascript_tag "var current_user = null;" %>
+<% end %>
+<script>
+	$(function(){last_submissions();});
+</script>

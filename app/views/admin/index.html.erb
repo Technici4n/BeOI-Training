@@ -1,0 +1,19 @@
+<h1>Admin Tools</h1>
+
+<div>
+	<h2>Create subforum</h2>
+	<%= form_for @subforum, url: {action: "new_subforum"} do |f| %>
+	
+		<p>
+			<%= f.label :title %><br/>
+			<%= f.text_field :title %>
+		</p>
+		
+		<p>
+			<%= f.label :description %><br/>
+			<%= f.text_area :description %>
+		</p>
+		
+		<%= f.submit %>
+	<% end %>
+</div>

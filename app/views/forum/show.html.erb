@@ -1,0 +1,32 @@
+<ol class="breadcrumb" style="font-size:18px;">
+	<li><a href="/forum">Forum</a></li>
+	<li class="active" style="color:#235064;"><strong><%= @subforum.title %></strong></li>
+</ol>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span class="active" style="color:#235064;"><strong><%= @subforum.title %></strong></span>
+	</div>
+	<div class="panel-body">
+		<span style="font-size: 16px;"><i><%= @subforum.description %></i></span>
+		<table class="table table-bordered" style="background-color: #FFFFFF; border-radius: 20px; margin-top: 20px;">
+			<tr style="background-color: #0095b6;">
+				<th>Subject</th>
+				<th>Author</th>
+				<th>Repl.</th>
+			</tr>
+			
+			<% @subforum.subjects.each do |subject| %>
+				<tr>
+					<td><%= link_to subject.title, "/forum/subjects/#{subject.id}" %></td>
+					<td><%= User.find(subject.forum_messages[0].author_id).username %></td>
+					<td><%= subject.forum_messages.count - 1 %></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>
+
+<% if session[:user_id] %>
+	<center><%= link_to "New Subject", "/forum/#{@subforum.id}/new", class: "btn btn-lg btn-primary btn-gray", style: "margin: 0 0 10px 0;" %></button></center>
+<% end %>
