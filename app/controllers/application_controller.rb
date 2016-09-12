@@ -1,13 +1,17 @@
+
+
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
 	helper_method :show_error, :get_error_format
 
+	# Add the error ("msg") to the errors to be alerted
 	def show_error(msg)
 		session[:errors] ||= []
 		session[:errors] << msg
 		puts session[:errors] = session[:errors]
 	end
 	
+	# Returns the error HTML code, and clears the error list
 	def get_error_format
 		errors = session[:errors]
 		out = ""
@@ -22,6 +26,20 @@ class ApplicationController < ActionController::Base
 		end
 		session[:errors] = []
 		return out.html_safe()
+	end
+	
+	# Check if str is at least lgth charachters long
+	def validate_length(str, field_name, lgth, max_lgth = 1.0/0.0)
+		if str && str.length >= lgth && str.length <= max_lgth
+			return true
+		else
+			if max_lgth < 1.0/0.0
+				show_error("The #{field_name} must be between #{lgth} and #{max_lgth} characters long.")
+			else
+				show_error("The #{field_name} must be at least #{lgth} characters long.")
+			end
+			return false
+		end
 	end
 	
 	protected

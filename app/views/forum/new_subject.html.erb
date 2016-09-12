@@ -15,28 +15,14 @@
 		<br/><br/>
 		<%= form_tag action:"create_subject" do %>
 			
-			<% if @subject.errors.any? %>
-				<div id="error_explanation">
-					<h2>
-						<%= pluralize(@subject.errors.count, "error") %> made you unable to create a new subject:
-					</h2>
-					
-					<ul>
-						<% @subject.errors.full_messages.each do |err| %>
-							<li><%= err %></li>
-						<% end %>
-					</ul>
-				</div>
-			<% end %>
-			
 			<div class="form-group">
 				<%= label_tag :title %><br/>
-				<%= text_field_tag :title, "", class: "form-control" %>
+				<%= text_field_tag :title, params[:title], class: "form-control", placeholder: "Title" %>
 			</div>
 			
 			<%= render "render_toolbar" %>
 			<div class="form-group">
-				<%= text_area_tag :message_text, "", class: "form-control", style: "height: 200px", id: "message_edit" %>
+				<%= text_area_tag :message_text, params[:message_text], class: "form-control", style: "height: 200px", id: "message_edit", placeholder: "Message" %>
 			</div>
 			
 			<%= submit_tag "Create New Subject", class: "btn btn-primary" %>

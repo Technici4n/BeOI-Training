@@ -16,36 +16,33 @@ class ForumController < ApplicationController
 	end
 	
 	def create_subject
-		# Create first message
-		@first_message = ForumMessage.new
-		@first_message.text = params[:message_text]
-		@first_message.author_id = User.find(session[:user_id]).id
-		
-		# Create subject
-		if not params[:message_text]
-			@subject.errors.add(:message_text, message: "can't be blank")
+		# Title and text can't be blank
+		if !(validate_length(params[:title], "title", 3, 50) && validate_length(params[:message_text], "message", 1, 8192))
 			render "new_subject", :subject => @subject
-			return
-		end
-		@first_message.save
-		
-		@subject = Subject.new
-		@subforum = Subforum.find(params[:id])
-		@subject.subforum = @subforum
-		@subject.title = params[:title]
-		@subject.forum_messages.push(@first_message)
-		
-		if @subject.save
-			@first_message.update(:subject => @subject)
-			redirect_to "/forum/#{params[:id]}"
 		else
-			render "new_subject", :subject => @subject
+			# Create first message
+			@first_message = ForumMessage.new
+			@first_message.text = params[:message_text]
+			@first_message.author_id = User.find(session[:user_id]).id
+			
+			# Create subject
+			@first_message.save
+			
+			@subject = Subject.new
+			@subforum = Subforum.find(params[:id])
+			@subject.subforum = @subforum
+			@subject.title = params[:title]
+			@subject.forum_messages.push(@first_message)
+			
+			@subject.save
+			redirect_to "/forum/#{params[:id]}", :message_text => params[:message_text], :title => params[:title]
 		end
 	end
 	
 	def new_subject
 		@subforum = Subforum.find(params[:id])
-		@subject = Subject.new
+		params[:message_text] ||= ""
+		params[:title] ||= ""
 	end
 	
 	def show_subject
