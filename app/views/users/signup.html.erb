@@ -2,20 +2,6 @@
 
 <%= form_for @user, url: {action: "create"} do |f| %>
 	
-	<% if @user.errors.any? %>
-		<div id="error_explanation">
-			<h2>
-				<%= pluralize(@user.errors.count, "error") %> made you unable to sign up:
-			</h2>
-			
-			<ul>
-				<% @user.errors.full_messages.each do |err| %>
-					<li><%= err %></li>
-				<% end %>
-			</ul>
-		</div>
-	<% end %>
-		
 	<div class="form-group">
 		<%= f.label "Username" %><br/>
 		<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: "Username" %>

@@ -1,24 +1,32 @@
 class UsersController < ApplicationController
 	before_action :save_login_state, :only => [:login, :login_attempt, :signup, :profile]
 	
+	EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
+	UVA_USERNAME_REGEX = /\A[A-Z0-9_]{3,}\z/i
+	
 	def signup
 		@user = User.new
 	end
 	
 	def create
 		@user = User.new(user_params)
-		if(@user.password == nil || @user.password_confirmation == nil || @user.password.length < 4 || @user.password != @user.password_confirmation)
-			@user.errors.add(:base, "Password must be at least 4 characters long and match the password confirmation")
-			render "signup"
-		elsif @user.save
-			redirect_to "/"
-		else
-			render "signup"
+		if validate_length(@user.username, "username", 3, 40) && validate_uniqueness(User, "username", @user.username, "username")
+			if validate_regex(@user.uva, UVA_USERNAME_REGEX, "UVa username") && validate_uniqueness(User, "uva", @user.uva, "UVa username")
+				if validate_regex(@user.email, EMAIL_REGEX, "email address") && validate_uniqueness(User, "email", @user.email, "email")
+					if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
+						session[:success] = "Your account has been created."
+						redirect_to "/"
+						return
+					end
+				end
+			end
 		end
+		render "signup"
 	end
 	
 	def logout
 		session[:user_id] = nil
+		session[:info] = "You successfully signed out."
 		redirect_to "/"
 	end
 	
@@ -26,12 +34,11 @@ class UsersController < ApplicationController
 		authorized_user = User.authenticate(params[:username_or_email], params[:login_password])
 		if authorized_user
 			session[:user_id] = authorized_user.id
-			flash[:notice] = "Welcome, #{authorized_user.username}"
+			session[:success] = "You are now logged in. Welcome, <strong>#{authorized_user.username}</strong> !"
 			redirect_to "/"
 		else
-			@login_error = "Invalid username or password"
-			flash[:notice] = "Invalid username or password"
-			render "login"
+			show_error("Invalid username or password.")
+			render "index/index"
 		end
 	end
 	
