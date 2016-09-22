@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901140817) do
+ActiveRecord::Schema.define(version: 20160916162600) do
 
   create_table "forum_messages", force: :cascade do |t|
     t.string   "text"
@@ -55,8 +55,7 @@ ActiveRecord::Schema.define(version: 20160901140817) do
     t.boolean  "admin",           null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.string   "first_name"
-    t.string   "last_name"
+    t.string   "display_name"
   end
 
 end

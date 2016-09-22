@@ -94,13 +94,23 @@ class ApplicationController < ActionController::Base
 		end
 	end
 	
+	def validate_existing(str, field_name)
+		if str && str.length > 0
+			return true
+		else
+			show_error("The #{field_name} can't be blank.")
+			return false
+		end
+	end
+	
 	protected
 		def authenticate_user(kick = true)
 			if User.exists?(id: session[:user_id])
 				@current_user = User.find(session[:user_id])
 				return true
 			elsif kick
-				redirect_to "/users/login"
+				show_error("You must be logged in to do that.")
+				redirect_to "/"
 				return false
 			end
 		end
@@ -114,6 +124,7 @@ class ApplicationController < ActionController::Base
 		end
 		def admin_check
 			if @current_user.admin != true
+				show_error("You are not allowed to do that.")
 				redirect_to "/"
 			end
 		end

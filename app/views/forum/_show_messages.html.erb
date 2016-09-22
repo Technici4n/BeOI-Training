@@ -6,7 +6,7 @@
 	<table class="table table-bordered">
 		<tr style="background-color: #0095b6">
 			<th>
-				<span style="font-size:20px;"><strong><%= User.find(message.author_id).username %></strong></span>
+				<span style="font-size:20px;"><strong><%= User.find(message.author_id).display_name %></strong></span>
 				<span style="float:right; font-size:18px">
 					<%= message.created_at.to_date %>, at <%= message.created_at.hour.to_s.rjust(2, "0") + ":" + message.created_at.min.to_s.rjust(2, "0") + ":" + message.created_at.sec.to_s.rjust(2, "0") %>
 				</span>

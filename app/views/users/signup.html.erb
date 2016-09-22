@@ -1,32 +1,43 @@
-<h1>Sign Up</h1>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Sign Up</strong></span>
+	</div>
+	<div class="panel-body">
+	<%= form_for @user, url: {action: "create"} do |f| %>
+		
+		<div class="form-group">
+			<%= f.label "Username" %><br/>
+			<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: "Username" %>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "UVa Onlinejudge username" %><br/>
+			<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: "UVa username" %>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "Displayed name" %>
+			<%= f.text_field :display_name, class: "form-control", style: "width: 250px;", placeholder: "Displayed name" %>
+			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "Email Address" %><br/>
+			<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: "Email" %>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "Password" %><br/>
+			<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: "Password" %>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "Password Confirmation" %><br/>
+			<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: "Password confirmation" %>
+		</div>
+		
+		<%= f.submit class: "btn btn-default btn-primary", style: "width:250px;" %>
 
-<%= form_for @user, url: {action: "create"} do |f| %>
-	
-	<div class="form-group">
-		<%= f.label "Username" %><br/>
-		<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: "Username" %>
+	<% end %>
 	</div>
-	
-	<div class="form-group">
-		<%= f.label "UVa Onlinejudge username" %><br/>
-		<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: "UVa username" %>
-	</div>
-	
-	<div class="form-group">
-		<%= f.label "Email Address" %><br/>
-		<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: "Email" %>
-	</div>
-	
-	<div class="form-group">
-		<%= f.label "Password" %><br/>
-		<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: "Password" %>
-	</div>
-	
-	<div class="form-group">
-		<%= f.label "Password Confirmation" %><br/>
-		<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: "Password confirmation" %>
-	</div>
-	
-	<%= f.submit class: "btn btn-default btn-primary", style: "width:200px;" %>
-
-<% end %>
+</div>

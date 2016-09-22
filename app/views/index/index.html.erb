@@ -2,6 +2,27 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
+		<strong>Next Contests</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Name</th>
+					<th>Length</th>
+					<th>Date</th>
+					<th>Time left</th>
+				</tr>
+			</thead>
+			<tbody id="nextcontests">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
 		<strong>Top solvers (last 2 weeks)</strong>
 	</div>
 	<div class="panel-body">
@@ -49,5 +70,9 @@
 	<%= javascript_tag "var current_user = null;" %>
 <% end %>
 <script>
-	$(function(){last_submissions();});
+	$(function()
+	{
+		last_submissions();
+		next_contests();
+	});
 </script>

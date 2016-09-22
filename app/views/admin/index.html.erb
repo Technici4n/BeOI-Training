@@ -1,19 +1,25 @@
-<h1>Admin Tools</h1>
+<ol class="breadcrumb" style="font-size:28px;">
+	<li class="active" style="color:#235064;"><strong>Admin Tools</strong></li>
+</ol>
 
-<div>
-	<h2>Create subforum</h2>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Create Subforum</strong></span>
+	</div>
+	<div class="panel-body">
 	<%= form_for @subforum, url: {action: "new_subforum"} do |f| %>
 	
-		<p>
+		<div class="form-group">
 			<%= f.label :title %><br/>
-			<%= f.text_field :title %>
-		</p>
+			<%= f.text_field :title, :class => "form-control" %>
+		</div>
 		
-		<p>
+		<div class="form-group">
 			<%= f.label :description %><br/>
-			<%= f.text_area :description %>
-		</p>
+			<%= f.text_area :description, :class => "form-control" %>
+		</div>
 		
-		<%= f.submit %>
+		<%= f.submit :class => "btn btn-primary" %>
 	<% end %>
+	</div>
 </div>

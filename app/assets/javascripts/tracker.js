@@ -4,6 +4,24 @@ var last_subs = [];
 var current_user_name = null;
 var last_sub = 0;
 
+// Sign Up form only !!
+function fetch_uva_id()
+{
+	if($('#user_uva').val() != "")
+	{
+		$.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}".f($('#user_uva').val()), function (data)
+		{
+			if(data != 0)
+			{
+				$.getJSON("http://uhunt.felix-halim.net/api/subs-user-last/{0}/0".f(data), function (data2)
+				{
+					$('#user_display_name').val(data2["name"]);
+				});
+			}
+		});
+	}
+}
+
 function top_solvers(days)
 {
 	var mintime = $.now()/1000 - days*3600*24;
@@ -36,7 +54,6 @@ function top_solvers(days)
 	var sum = 0;
 	for(var key in count)
 	{
-		console.log("{0}:{1}".f(key, count[key]));
 		top_solvers.push([key, count[key]]);
 		sum += count[key];
 	}
@@ -76,22 +93,25 @@ function compare_subs_by_timestamp(a, b)
 
 function fetch_ids()
 {
-	$.each(usernames, function(i, username)
+	for(var i = 0; i < usernames.length; ++i)
 	{
-		id_reqs.push($.getJSON("http://uhunt.felix-halim.net/api/uname2uid/" + username, parse_id_request));
-	});
+		var username = usernames[i];
+		console.log(username);
+		id_reqs.push(id_request(username[0], username[1]));
+	}
 }
 
-function parse_id_request(data)
+function id_request(username, display_name)
 {
-	ids.push(data);
+	return $.getJSON("http://uhunt.felix-halim.net/api/uname2uid/" + username, function(data){ids.push([data, display_name]);});
 }
 
-function subs_request(id)
+function subs_request(id, display_name)
 {
 	return $.getJSON("http://uhunt.felix-halim.net/api/subs-user/{0}".f(id), function(data)
 	{
-		var name = data["name"];
+		//var name = data["name"];
+		var name = display_name;
 		if(data["uname"] == current_user)
 		{
 			current_user_name = name;
@@ -110,10 +130,10 @@ function last_submissions()
 	$.when.apply($, id_reqs).done(function()
 	{
 		var subs_req = [];
-		$.each(ids, function(i, id)
+		for(var i = 0; i < ids.length; ++i)
 		{
-			subs_req.push(subs_request(id));
-		});
+			subs_req.push(subs_request(ids[i][0], ids[i][1]));
+		}
 		
 		$.when.apply($, subs_req).done(function()
 		{
@@ -148,12 +168,6 @@ function set_problem_format(i, id)
 	{
 		$('#problem{0}'.f(i)).html('<a target="_blank" href="https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}">{1} - {2}</a>'.f(id, data["num"], data["title"]));
 	});
-}
-
-function timestamp_to_string(timestamp)
-{
-	var date = new Date(timestamp*1000);
-	return '{0}-{1}-{2}, at {3}:{4}:{5}'.f(date.getYear() + 1900, (date.getMonth() + 1).toString().fix_left("00", 2), date.getDate().toString().fix_left("00", 2), date.getHours().toString().fix_left("00", 2), date.getMinutes().toString().fix_left("00", 2), date.getSeconds().toString().fix_left("00", 2));
 }
 
 function get_runtime_format(runtime)

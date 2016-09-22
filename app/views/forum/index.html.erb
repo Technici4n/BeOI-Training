@@ -29,7 +29,7 @@
 					<% end %>
 					<tr>
 						<td><%= link_to s.title, "/forum/subjects/#{s.id}" %></td>
-						<td><%= User.find(s.forum_messages[0].author_id).username %></td>
+						<td><%= User.find(s.forum_messages[0].author_id).display_name %></td>
 						<td><%= s.forum_messages.count - 1 %></td>
 					</tr>
 					<% i += 1 %>

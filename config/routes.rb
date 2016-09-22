@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 	# User management
 	get "/users/signup", to: "users#signup"
 	post "/users/create", to: "users#create"
-	get "/users/login", to: "users#login"
 	post "/users/login_attempt", to: "users#login_attempt"
 	get "/users/logout", to: "users#logout"
 	get "/users/profile", to: "users#profile"
@@ -22,4 +21,7 @@ Rails.application.routes.draw do
 	post "/forum/subjects/:subject_id/create", to: "forum#create_message"
 
 	root "index#index"
+	
+	# Default route
+	match "*path", to: "errors#show404", via: :all unless Rails.env.development?
 end

@@ -1,3 +1,13 @@
 <%= form_for :user, url: "/users/profile", method: :patch do |f| %>
-
+	<div class="form-group">
+		<%= f.label :username %>
+		<%= f.text_field :username %>
+	</div>
+	
+	<div class="form-group">
+		<%= f.label :uva %>
+		<%= f.text_field :uva %>
+	</div>
+	
+	
 <% end %>

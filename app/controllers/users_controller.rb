@@ -9,14 +9,20 @@ class UsersController < ApplicationController
 	end
 	
 	def create
+		require "net/http"
+		
 		@user = User.new(user_params)
 		if validate_length(@user.username, "username", 3, 40) && validate_uniqueness(User, "username", @user.username, "username")
 			if validate_regex(@user.uva, UVA_USERNAME_REGEX, "UVa username") && validate_uniqueness(User, "uva", @user.uva, "UVa username")
-				if validate_regex(@user.email, EMAIL_REGEX, "email address") && validate_uniqueness(User, "email", @user.email, "email")
-					if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
-						session[:success] = "Your account has been created."
-						redirect_to "/"
-						return
+				if validate_length(@user.display_name, "displayed name", 3, 40) && validate_uniqueness(User, "display_name", @user.display_name, "displayed name")
+					if validate_regex(@user.email, EMAIL_REGEX, "email address") && validate_uniqueness(User, "email", @user.email, "email")
+						if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
+							if(@user.save)
+								session[:success] = "Your account has been created."
+								redirect_to "/"
+								return
+							end
+						end
 					end
 				end
 			end
@@ -34,7 +40,7 @@ class UsersController < ApplicationController
 		authorized_user = User.authenticate(params[:username_or_email], params[:login_password])
 		if authorized_user
 			session[:user_id] = authorized_user.id
-			session[:success] = "You are now logged in. Welcome, <strong>#{authorized_user.username}</strong> !"
+			session[:success] = "You are now logged in. Welcome, <strong>#{authorized_user.display_name}</strong> !"
 			redirect_to "/"
 		else
 			show_error("Invalid username or password.")
@@ -47,6 +53,6 @@ class UsersController < ApplicationController
 	
 	private
 		def user_params
-			params.require(:user).permit(:username, :uva, :email, :admin, :inscription_date, :password, :password_confirmation)
+			params.require(:user).permit(:username, :uva, :email, :admin, :inscription_date, :password, :password_confirmation, :display_name)
 		end
 end

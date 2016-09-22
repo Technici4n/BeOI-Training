@@ -19,7 +19,7 @@
 			<% @subforum.subjects.each do |subject| %>
 				<tr>
 					<td><%= link_to subject.title, "/forum/subjects/#{subject.id}" %></td>
-					<td><%= User.find(subject.forum_messages[0].author_id).username %></td>
+					<td><%= User.find(subject.forum_messages[0].author_id).display_name %></td>
 					<td><%= subject.forum_messages.count - 1 %></td>
 				</tr>
 			<% end %>

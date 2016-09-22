@@ -9,12 +9,7 @@ class AdminController < ApplicationController
 	
 	def new_subforum
 		@subforum = Subforum.new(subforum_params)
-		if !(@subforum.title && @subforum.title.length > 0)
-			show_error("Title can't be blank !")
-		elsif !(@subforum.description && @subforum.description.length > 0)
-			show_error("Description can't be blank !")
-		end
-		if @subforum.save
+		if validate_existing(@subforum.title, "title") && validate_uniqueness(Subforum, "title", @subforum.title, "title") && validate_existing(@subforum.description, "description") && @subforum.save
 			redirect_to "/forum"
 		else
 			render "index"
