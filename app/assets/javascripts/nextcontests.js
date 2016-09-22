@@ -1,12 +1,12 @@
 var json_requests = [];
 var next_ctests = [];
 
-var CODEFORCES_LINK = "https://codeforces.com/";
+var CODEFORCES_LINK = "http://codeforces.com/";
 
 function next_contests()
 {
 	// Codeforces
-	json_requests.push($.getJSON("https://codeforces.com/api/contest.list/", parse_codeforces_response));
+	json_requests.push($.getJSON("http://codeforces.com/api/contest.list/", parse_codeforces_response));
 	
 	$.when.apply($, json_requests).done(function()
 	{

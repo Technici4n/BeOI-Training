@@ -9,11 +9,11 @@ function fetch_uva_id()
 {
 	if($('#user_uva').val() != "")
 	{
-		$.getJSON("https://uhunt.felix-halim.net/api/uname2uid/{0}/".f($('#user_uva').val()), function (data)
+		$.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}/".f($('#user_uva').val()), function (data)
 		{
 			if(data != 0)
 			{
-				$.getJSON("https://uhunt.felix-halim.net/api/subs-user-last/{0}/0/".f(data), function (data2)
+				$.getJSON("http://uhunt.felix-halim.net/api/subs-user-last/{0}/0/".f(data), function (data2)
 				{
 					$('#user_display_name').val(data2["name"]);
 				});
@@ -103,12 +103,12 @@ function fetch_ids()
 
 function id_request(username, display_name)
 {
-	return $.getJSON("https://uhunt.felix-halim.net/api/uname2uid/{0}/".f(username), function(data){ids.push([data, display_name]);});
+	return $.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}/".f(username), function(data){ids.push([data, display_name]);});
 }
 
 function subs_request(id, display_name)
 {
-	return $.getJSON("https://uhunt.felix-halim.net/api/subs-user/{0}/".f(id), function(data)
+	return $.getJSON("http://uhunt.felix-halim.net/api/subs-user/{0}/".f(id), function(data)
 	{
 		//var name = data["name"];
 		var name = display_name;
@@ -164,9 +164,9 @@ function append_submissions(count)
 
 function set_problem_format(i, id)
 {
-	$.getJSON("https://uhunt.felix-halim.net/api/p/id/{0}/".f(id), function(data)
+	$.getJSON("http://uhunt.felix-halim.net/api/p/id/{0}/".f(id), function(data)
 	{
-		$('#problem{0}'.f(i)).html('<a target="_blank" href="https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}/">{1} - {2}</a>'.f(id, data["num"], data["title"]));
+		$('#problem{0}'.f(i)).html('<a target="_blank" href="http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}/">{1} - {2}</a>'.f(id, data["num"], data["title"]));
 	});
 }
 
