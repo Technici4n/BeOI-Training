@@ -1,2 +1,12 @@
+1.0.1
+	- Added run script for local debug
+	- Added an helper function to generate standardized form labels
+	- Added some localization for the users controller
+	- Added is_contestant field to the user model, for later use
+	- Added a profile page
+	- Removed the old login page (now in the navbar since ages)
+	- Fixed some code errors + code refactoring (a bit)
+	- Fixed the duplicates "bug" in the UVa/CF tracker
+
 1.0.0
 	- First release

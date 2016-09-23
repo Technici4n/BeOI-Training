@@ -6,34 +6,34 @@
 	<%= form_for @user, url: {action: "create"} do |f| %>
 		
 		<div class="form-group">
-			<%= f.label "Username" %><br/>
-			<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: "Username" %>
+			<%= ApplicationHelper.f_label t(:username)%><br>
+			<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: t(:username) %>
 		</div>
 		
 		<div class="form-group">
-			<%= f.label "UVa Onlinejudge username" %><br/>
-			<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: "UVa username" %>
+			<%= ApplicationHelper.f_label t(:uva)%><br>
+			<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: t(:uva) %>
 		</div>
 		
 		<div class="form-group">
-			<%= f.label "Displayed name" %>
-			<%= f.text_field :display_name, class: "form-control", style: "width: 250px;", placeholder: "Displayed name" %>
+			<%= ApplicationHelper.f_label t(:display_name)%><br>
+			<%= f.text_field :display_name, class: "form-control", style: "width: 250px;", placeholder: t(:display_name) %>
 			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>
 		</div>
 		
 		<div class="form-group">
-			<%= f.label "Email Address" %><br/>
-			<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: "Email" %>
+			<%= ApplicationHelper.f_label t(:email)%><br>
+			<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: t(:email) %>
 		</div>
 		
 		<div class="form-group">
-			<%= f.label "Password" %><br/>
-			<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: "Password" %>
+			<%= ApplicationHelper.f_label t(:password)%><br>
+			<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: t(:password) %>
 		</div>
 		
 		<div class="form-group">
-			<%= f.label "Password Confirmation" %><br/>
-			<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: "Password confirmation" %>
+			<%= ApplicationHelper.f_label t(:password_confirmation)%><br>
+			<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: t(:password_confirmation) %>
 		</div>
 		
 		<%= f.submit class: "btn btn-default btn-primary", style: "width:250px;" %>

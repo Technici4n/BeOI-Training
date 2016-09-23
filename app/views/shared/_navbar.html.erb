@@ -1,3 +1,4 @@
+<% require "application_helper" %>
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -22,7 +23,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= User.find(session[:user_id]).display_name %><span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="/users/profile">Profile</a></li>
+						<li><a href="/users/profile">Account</a></li>
 						<li><a href="#">NYI</a></li>
 						<li><a href="#">NYI</a></li>
 						<li role="separator" class="divider"></li>
@@ -42,13 +43,13 @@
 							<%= form_tag :action => "login_attempt", :controller => "users", :method => :post do %>
 							
 								<div class="form-group">
-									<%= label_tag "Username" %><br/>
-									<%= text_field_tag :username_or_email, params[:username_or_email], class: "form-control" %>
+									<%= ApplicationHelper.f_label t(:username_or_email) %><br/>
+									<%= text_field_tag :username_or_email, params[:username_or_email], class: "form-control", placeholder: t(:username_or_email) %>
 								</div>
 									
 								<div class="form-group">
-									<%= label_tag "Password" %><br/>
-									<%= password_field_tag :login_password, "", class: "form-control" %>
+									<%= ApplicationHelper.f_label t(:password) %><br/>
+									<%= password_field_tag :login_password, "", class: "form-control", placeholder: t(:password) %>
 								</div>
 								
 								<%= submit_tag "Log in", class: "btn btn-default btn-primary", style: "width:200px;" %>

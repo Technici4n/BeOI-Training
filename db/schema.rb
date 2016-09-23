@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916162600) do
+ActiveRecord::Schema.define(version: 20160923183418) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "forum_messages", force: :cascade do |t|
     t.string   "text"
@@ -56,6 +59,7 @@ ActiveRecord::Schema.define(version: 20160916162600) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "display_name"
+    t.boolean  "is_contestant"
   end
 
 end

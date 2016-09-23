@@ -1,7 +1,7 @@
 require "application_helper"
 
 class AdminController < ApplicationController
-	before_filter :authenticate_user, :admin_check
+	before_action :authenticate_user, :admin_check
 	
 	def index
 		@subforum = Subforum.new()

@@ -5,4 +5,7 @@ module ApplicationHelper
 	def self.milisecs_to_s(milisecs)
 		return "#{(milisecs / 1000).to_s}.#{(milisecs % 1000).to_s.rjust(3, "0")}"
 	end
+	def self.f_label(text)
+		return "<span class=\"form-label\">#{text}</span>".html_safe
+	end
 end

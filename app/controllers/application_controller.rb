@@ -114,8 +114,9 @@ class ApplicationController < ActionController::Base
 				return false
 			end
 		end
+		# Redirects the user to the root if he is connected
 		def save_login_state
-			if session[:user_id]
+			if User.exists?(id: session[:user_id])
 				redirect_to "/"
 				return false
 			else

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 	post "/users/login_attempt", to: "users#login_attempt"
 	get "/users/logout", to: "users#logout"
 	get "/users/profile", to: "users#profile"
+	patch "/users/profile", to: "users#update"
 	
 	# Admin tools
 	get "/admin", to: "admin#index"

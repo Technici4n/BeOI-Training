@@ -1,13 +1,28 @@
-<%= form_for :user, url: "/users/profile", method: :patch do |f| %>
-	<div class="form-group">
-		<%= f.label :username %>
-		<%= f.text_field :username %>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Edit Account</strong></span>
 	</div>
+	<div class="panel-body">
+	<%= form_for :user, url: "/users/profile", method: :patch do |f| %>
 	
-	<div class="form-group">
-		<%= f.label :uva %>
-		<%= f.text_field :uva %>
+		<div class="form-group">
+			<%= ApplicationHelper.f_label t(:uva) %><br>
+			<%= f.text_field :uva, class: "form-control" %>
+		</div>
+		
+		<div class="form-group">
+			<%= ApplicationHelper.f_label t(:display_name) %><br>
+			<%= f.text_field :display_name, class: "form-control" %>
+			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>
+		</div>
+		
+		<div class="checkbox">
+			<%= f.check_box :is_contestant %>
+			I am a BeOI contestant
+		</div>
+		
+		<%= f.submit "Update account" %>
+		
+	<% end %>
 	</div>
-	
-	
-<% end %>
+</div>

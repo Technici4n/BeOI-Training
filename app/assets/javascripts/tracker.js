@@ -1,8 +1,8 @@
-var ids = [];
-var id_reqs = [];
-var last_subs = [];
-var current_user_name = null;
-var last_sub = 0;
+var ids;
+var id_reqs;
+var last_subs;
+var current_user_name;
+var last_sub;
 
 // Sign Up form only !!
 function fetch_uva_id()
@@ -126,6 +126,14 @@ function subs_request(id, display_name)
 
 function last_submissions()
 {
+	// Have to reset the global variables every time to prevent duplicates
+	// Moral: don't use global variables ;)
+	ids = [];
+	id_reqs = [];
+	last_subs = [];
+	current_user_name = null;
+	last_sub = 0;
+
 	fetch_ids();
 	$.when.apply($, id_reqs).done(function()
 	{
