@@ -4,7 +4,7 @@ module IndexHelper
 	def self.format_users_to_js
 		format = []
 		User.all.each do |u|
-			format << [u.uva, u.display_name];
+			format << [u.uva, u.display_name, u.is_contestant];
 		end
 		return format
 	end

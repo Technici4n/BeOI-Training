@@ -1,3 +1,8 @@
+1.0.2
+	- Added the advanced UVa tracker
+	- Added some JS util functions
+	- last_submissions (UVa tracker) now takes a callback as parameter
+
 1.0.1
 	- Added run script for local debug
 	- Added an helper function to generate standardized form labels

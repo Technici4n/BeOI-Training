@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 	get "/forum/subjects/:subject_id/new", to: "forum#new_message"
 	post "/forum/subjects/:subject_id/create", to: "forum#create_message"
 
+	# Misc.
+	get "/tracker", to: "index#tracker"
+	
 	root "index#index"
 	
 	# Default route

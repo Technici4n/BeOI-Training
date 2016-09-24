@@ -8,6 +8,28 @@ String.prototype.format = String.prototype.f = function()
 	return s;
 };
 
+String.prototype.split = function(c)
+{
+	var ans = [];
+	var curr = "";
+	for(var i = 0; i < this.length; ++i)
+	{
+		if(this[i] == c)
+		{
+			if(curr != "")
+				ans.push(curr);
+			curr = "";
+		}
+		else
+		{
+			curr += this[i];
+		}
+	}
+	if(curr != "")
+		ans.push(curr)
+	return ans;
+};
+
 String.prototype.fix_left = function(str, padding)
 {
 	return String(str + this).slice(-padding);
@@ -43,3 +65,22 @@ function timestamp_to_countdown(timestamp)
 	}
 	return ans;
 }
+
+/*
+function binary_search(array, el)
+{
+	var lo = 0, hi = array.length - 1;
+	while(lo <= hi)
+	{
+		// a | b = Math.floor(a)
+		// Fuck this implicit cast...
+		var mid = (lo + hi) / 2 | 0;
+		if(array[mid] == el)
+			return mid;
+		else if(array[mid] < el)
+			lo = mid + 1;
+		else
+			hi = mid - 1;
+	}
+	return -1;
+}*/

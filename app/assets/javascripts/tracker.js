@@ -96,21 +96,19 @@ function fetch_ids()
 	for(var i = 0; i < usernames.length; ++i)
 	{
 		var username = usernames[i];
-		console.log(username);
-		id_reqs.push(id_request(username[0], username[1]));
+		id_reqs.push(id_request(username[0], username[1], username[2]));
 	}
 }
 
-function id_request(username, display_name)
+function id_request(username, display_name, is_contestant)
 {
-	return $.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}".f(username), function(data){ids.push([data, display_name]);});
+	return $.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}".f(username), function(data){ids.push([data, display_name, is_contestant]);});
 }
 
 function subs_request(id, display_name)
 {
 	return $.getJSON("http://uhunt.felix-halim.net/api/subs-user/{0}".f(id), function(data)
 	{
-		//var name = data["name"];
 		var name = display_name;
 		if(data["uname"] == current_user)
 		{
@@ -124,7 +122,7 @@ function subs_request(id, display_name)
 	});
 }
 
-function last_submissions()
+function last_submissions(callback)
 {
 	// Have to reset the global variables every time to prevent duplicates
 	// Moral: don't use global variables ;)
@@ -146,8 +144,7 @@ function last_submissions()
 		$.when.apply($, subs_req).done(function()
 		{
 			last_subs.sort(compare_subs_by_timestamp);
-			top_solvers(14);
-			append_submissions(20);
+			callback();
 		});
 	});
 }
@@ -170,11 +167,21 @@ function append_submissions(count)
 	}
 }
 
+// By problem ID!
 function set_problem_format(i, id)
 {
 	$.getJSON("http://uhunt.felix-halim.net/api/p/id/{0}".f(id), function(data)
 	{
 		$('#problem{0}'.f(i)).html('<a target="_blank" href="http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}">{1} - {2}</a>'.f(id, data["num"], data["title"]));
+	});
+}
+
+// By problem NUMBER!!
+function set_problem_format_by_id(i, num)
+{
+	$.getJSON("http://uhunt.felix-halim.net/api/p/num/{0}".f(num), function(data)
+	{
+		$('#problem{0}'.f(i)).html('<a target="_blank" href="http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}">{1} - {2}</a>'.f(data["pid"], data["num"], data["title"]));
 	});
 }
 
@@ -281,4 +288,149 @@ function get_lang_format(id)
 	{
 		return "Python 3";
 	}
+}
+
+var contestants, others;
+var contestants_subs, others_subs;
+var problem_num_to_id;
+var contestants_accepteds;
+var others_accepteds;
+
+function show_tracked_problems()
+{
+	// 1. Show(ed) problem information
+	var problems = decodeURIComponent(window.location.search.substring(1));
+	var pids = problems.split(",");
+	// To make sure that 300 goes before 1000
+	for(var i = 0; i < pids.length; ++i)
+	{
+		pids[i] = pids[i].fix_left("00000000", 5);
+	}
+	pids.sort();
+	
+	// 2. Get user submissions
+	id_reqs = [];
+	ids = [];
+	contestants = []; others = [];
+	problem_num_to_id = {};
+	contestants_accepteds = {};
+	others_accepteds = {};
+	contestants_subs = []; others_subs = []; // [ [username, problem1 solved ?, problem2 solved ?, ..., total solved], ... ]
+	
+	fetch_ids();
+	
+	// Let's create the table
+	var buff = '<tr><th>User</th>';
+	for(var i = 0; i < pids.length; ++i)
+		buff += '<th>{0}</th>'.f(parseInt(pids[i]).toString());
+	buff += '<th>Total</th></tr>';
+	$('#contestant-submissions thead').append(buff);
+	$('#others-submissions thead').append(buff);
+	
+	// JSON requests
+	$.when.apply($, id_reqs).done(function()
+	{
+		$.getJSON("http://uhunt.felix-halim.net/api/p", function(data)
+		{
+			for(var i = 0; i < data.length; ++i)
+				problem_num_to_id[data[i][1].toString().fix_left("00000", 5)] = data[i][0];
+			
+			var id_reqs = [];
+			
+			var reqs = [];
+			var problems = [];
+			
+			for(var i = 0; i < pids.length; ++i)
+				problems.push(problem_num_to_id[pids[i]]);
+			
+			for(var i = 0; i < ids.length; ++i)
+			{
+				if(ids[i][2] == true)
+					contestants.push(ids[i]);
+				else
+					others.push(ids[i]);
+				
+				reqs.push(adv_sub_req(problems, ids[i]));
+			}
+			
+			$.when.apply($, reqs).done(function()
+			{
+				contestants_subs.sort();
+				for(var i = 0; i < contestants_subs.length; ++i)
+				{
+					var buff = "<tr>";
+					for(var j = 0; j < contestants_subs[i].length; ++j)
+						buff += "<td>{0}</td>".f(contestants_subs[i][j]);
+					buff += "</tr>";
+					$('#contestant-submissions tbody').append(buff);
+				}
+				
+				others_subs.sort();
+				for(var i = 0; i < others_subs.length; ++i)
+				{
+					var buff = "<tr>";
+					for(var j = 0; j < others_subs[i].length; ++j)
+						buff += "<td>{0}</td>".f(others_subs[i][j]);
+					buff += "</tr>";
+					$('#others-submissions tbody').append(buff);
+				}
+				
+				for(var i = 0; i < pids.length; ++i)
+				{
+					$('#tracked-problems').append('<tr><td><strong id="problem{0}">{1}</strong></td><td>{2}</td><td>{3}</td></tr>'.f(i, pids[i],
+					'<strong>{0}/{1}</strong>'.f(contestants_accepteds[problem_num_to_id[pids[i]].toString().fix_left("000000", 5)] || 0, contestants_subs.length),
+					'<strong>{0}/{1}</strong>'.f(others_accepteds[problem_num_to_id[pids[i]].toString().fix_left("000000", 5)] || 0, others_subs.length)));
+					set_problem_format_by_id(i, pids[i]);
+				}
+			});
+		});
+	});
+}
+
+function adv_sub_req(problems, user)
+{
+	return $.getJSON("http://uhunt.felix-halim.net/api/subs-pids/{0}/{1}/0".f(user[0], problems.toString()), function(data)
+	{
+		var dat = data[user[0]];
+		var subs = dat["subs"];
+		var entry = ["<strong>{0}</strong>".f(user[1])];
+		var total = 0;
+		var dict = {};
+		var tries = {};
+		for(var i = 0; i < subs.length; ++i)
+		{
+			if(subs[i][2] == 90)
+			{
+				if(!(subs[i][1].toString().fix_left("000000", 5) in dict))
+				{
+					dict[subs[i][1].toString().fix_left("000000", 5)] = 1;
+					++total;
+					if(user[2] == true)
+						contestants_accepteds[subs[i][1].toString().fix_left("00000", 5)] = ++contestants_accepteds[subs[i][1].toString().fix_left("00000", 5)] || 1;
+					else
+						others_accepteds[subs[i][1].toString().fix_left("00000", 5)] = ++others_accepteds[subs[i][1].toString().fix_left("00000", 5)] || 1;
+				}
+			}
+			if(!(subs[i][1].toString().fix_left("000000", 5) in tries))
+				tries[subs[i][1].toString().fix_left("000000", 5)] = 0;
+			++tries[subs[i][1].toString().fix_left("000000", 5)];
+		}
+		for(var i = 0; i < problems.length; ++i)
+		{
+			if(problems[i].toString().fix_left("000000", 5) in dict)
+				entry.push('<strong class="green">Solved</strong>');
+			else if(problems[i].toString().fix_left("000000", 5) in tries)
+				entry.push('<strong class="orange">Tried({0})</strong>'.f(tries[problems[i].toString().fix_left("000000", 5)]));
+			else
+				entry.push('');
+		}
+		if(total > 0)
+			entry.push('<strong>{0}</strong>'.f(total));
+		else
+			entry.push('');
+		if(user[2] == true)
+			contestants_subs.push(entry);
+		else
+			others_subs.push(entry);
+	});
 }

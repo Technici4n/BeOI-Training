@@ -76,7 +76,11 @@
 <script>
 	$(function()
 	{
-		last_submissions();
+		last_submissions(function()
+		{
+			top_solvers(14);
+			append_submissions(20);
+		});
 		next_contests();
 	});
 </script>

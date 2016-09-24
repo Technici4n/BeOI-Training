@@ -1,0 +1,65 @@
+<ol class="breadcrumb" style="font-size:28px;">
+	<li class="active" style="color:#235064;"><strong>Advanced UVa Tracker</strong></li>
+</ol>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Tracked problems</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Contestants</th>
+					<th>Others</th>
+				</tr>
+			</thead>
+			<tbody id="tracked-problems">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Submissions (contestants)</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table" id="contestant-submissions">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Submissions (others)</strong>
+	</div>
+	<div class="panel-body">
+		<table class="table" id="others-submissions">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<%= javascript_tag "var usernames = #{IndexHelper.format_users_to_js};" %>
+<script type="text/javascript">
+	$(function()
+	{
+		current_user = null;
+		show_tracked_problems(); // (and tracked submissions)
+	});
+</script>
+
+<!--<script type="text/javascript">
+	var array = [];
+	array = decodeURIComponent(window.location.search.substring(1)).split(",");
+	alert(array.length);
+</script>-->
