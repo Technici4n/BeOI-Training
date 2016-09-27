@@ -60,7 +60,7 @@ class ForumController < ApplicationController
 		@forum_message = ForumMessage.new(forum_message_params)
 		@forum_message.subject = Subject.find(params[:subject_id])
 		@forum_message.author_id = User.find(session[:user_id]).id
-		if validate_length(@first_message.text, "message", 1, 8192) && @forum_message.save
+		if validate_length(@forum_message.text, "message", 1, 8192) && @forum_message.save
 			redirect_to "/forum/subjects/#{@forum_message.subject.id}"
 		else
 			render "new_message", :forum_message => @forum_message, :subject => @subject
