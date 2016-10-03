@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 	# Admin tools
 	get "/admin", to: "admin#index"
 	post "/admin/new_subforum", to: "admin#new_subforum"
+	patch "/admin/update_event", to: "admin#update_event"
+	delete "/admin/clear_event", to: "admin#clear_event"
 	
 	# Forum
 	get "/forum", to: "forum#index"

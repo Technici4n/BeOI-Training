@@ -290,7 +290,7 @@ function get_lang_format(id)
 	}
 }
 
-var contestants, others;
+var eventusers, contestants, others;
 var contestants_subs, others_subs;
 var problem_num_to_id;
 var contestants_accepteds;
@@ -299,8 +299,7 @@ var others_accepteds;
 function show_tracked_problems()
 {
 	// 1. Show(ed) problem information
-	var problems = decodeURIComponent(window.location.search.substring(1));
-	var pids = problems.split(",");
+	var pids = tracked_problems.split(",");
 	// To make sure that 300 goes before 1000
 	for(var i = 0; i < pids.length; ++i)
 	{

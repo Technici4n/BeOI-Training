@@ -1,3 +1,9 @@
+1.0.3
+	- Added navbar link to the advanced UVa tracker
+	- Updated adv. tracker
+	- Added an event system for the tracker
+	- Code refactoring
+
 1.0.2
 	- Added the advanced UVa tracker
 	- Added some JS util functions

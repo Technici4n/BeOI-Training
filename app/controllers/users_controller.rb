@@ -39,6 +39,7 @@ class UsersController < ApplicationController
 					if validate_regex(@user.email, EMAIL_REGEX, "email address") && validate_uniqueness(User, "email", @user.email, "email")
 						if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
 							@user.is_contestant = false
+							@user.in_event = false
 							if @user.save
 								session[:success] = "Your account has been created. You are now logged in. Welcome, <strong>#{@user.display_name}</strong> !"
 								session[:user_id] = @user.id
@@ -77,6 +78,6 @@ class UsersController < ApplicationController
 		end
 		
 		def update_user_params
-			params.require(:user).permit(:uva, :display_name, :is_contestant)
+			params.require(:user).permit(:uva, :display_name, :is_contestant, :in_event)
 		end
 end

@@ -21,7 +21,12 @@
 			I am a BeOI contestant
 		</div>
 		
-		<%= f.submit "Update account" %>
+		<div class="checkbox">
+			<%= f.check_box :in_event %>
+			<%= Event.last.participation_text %>
+		</div>
+		
+		<%= f.submit "Update account", :class => "btn btn-primary" %>
 		
 	<% end %>
 	</div>

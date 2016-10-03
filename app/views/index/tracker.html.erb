@@ -1,17 +1,45 @@
+<% specific_name = if params[:event] == "true" && !Event.last.disabled then Event.last.name else "contestants" end %>
+<%= javascript_tag "var allow_event = #{params[:event] || false};" %>
+
 <ol class="breadcrumb" style="font-size:28px;">
 	<li class="active" style="color:#235064;"><strong>Advanced UVa Tracker</strong></li>
 </ol>
+
+<script type="text/javascript">
+	$(function()
+	{
+		$('#ids-input').val(tracked_problems);
+	});
+
+	function update_problems()
+	{
+		var problems = "";
+		var raw = $('#ids-input').val();
+		for(var i = 0; i < raw.length; ++i)
+		{
+			if('0' <= raw[i] && raw[i] <= '9')
+				problems += raw[i];
+			else
+				problems += ",";
+		}
+		window.location.href = "tracker?event={0}&problems={1}".f(allow_event, problems);
+	}
+</script>
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
 		<strong>Tracked problems</strong>
 	</div>
 	<div class="panel-body">
-		<table class="table">
+		<div class="form-group">
+			<input id="ids-input" class="form-control" placeholder="Seperate IDs by any non-number characters">
+		</div>
+		<center><button type="button" class="btn btn-primary" onclick="update_problems();">Apply changes!</button></center>
+		<table class="table" style="margin-top: 10px">
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Contestants</th>
+					<th><%= specific_name.slice(0, 1).capitalize + specific_name.slice(1..-1) %></th>
 					<th>Others</th>
 				</tr>
 			</thead>
@@ -23,7 +51,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
-		<strong>Submissions (contestants)</strong>
+		<strong>Submissions (<%= specific_name %>)</strong>
 	</div>
 	<div class="panel-body">
 		<table class="table" id="contestant-submissions">
@@ -49,7 +77,17 @@
 	</div>
 </div>
 
-<%= javascript_tag "var usernames = #{IndexHelper.format_users_to_js};" %>
+<%= javascript_tag "var tracked_problems = '#{params[:problems]}';" %>
+<% if params[:event] != "true" || Event.last.disabled %>
+	<%= javascript_tag "var usernames = #{IndexHelper.format_users_to_js};" %>
+<% else %>
+	<% format = []
+	   User.all.each do |u|
+		format << [u.uva, u.display_name, u.in_event]
+	   end %>
+	<%= javascript_tag "var usernames = #{format};" %>
+<% end %>
+		
 <script type="text/javascript">
 	$(function()
 	{
