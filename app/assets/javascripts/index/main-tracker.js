@@ -3,13 +3,17 @@
  */
 
 // uHunt request URLs
-var uhunt_domain = "http://uhunt.onlinejudge.org/api/"
+if(window.location.protocol == "https:")
+	var url_protocol = "https://";
+else
+	var url_protocol = "http://";
+var uhunt_domain = url_protocol + "uhunt.onlinejudge.org/api/"
 var uhunt_id_request_url = uhunt_domain + "uname2uid/{0}"; // Param: username
 var uhunt_user_submissions_url = uhunt_domain + "subs-user/{0}"; // Param: user ID
 var uhunt_all_problems_url = uhunt_domain + "p";
 
 // used in uva-util.js
-var uva_problem_url = "http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}";
+var uva_problem_url = "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}";
 
 // HTML tags IDs
 var html_id_last_submissions_table = "#lastsubmissions";
@@ -37,8 +41,10 @@ function last_submissions(callback)
 	{
 		id_requests.push(send_id_request(id));
 	}
+	
+	var submissions_requests = [];
 	// Add the problem info request
-	id_requests.push($.getJSON(uhunt_all_problems_url, function(data)
+	submissions_requests.push($.getJSON(uhunt_all_problems_url, function(data)
 	{
 		for(var i = 0; i < data.length; ++i)
 		{
@@ -49,7 +55,6 @@ function last_submissions(callback)
 	// 2. Get all submissions
 	$.when.apply($, id_requests).done(function()
 	{
-		var submissions_requests = [];
 		for(var id in users)
 		{
 			var user = users[id];

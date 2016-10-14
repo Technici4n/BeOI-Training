@@ -38,124 +38,38 @@ function top_solvers(days)
 	{
 		title:
 		{
-           text: "<strong>Accepted submissons over the past two weeks</strong>",
-		   useHTML: true
+           text: "<strong>Accepted submissons over the past two weeks</strong>", // Set title
+		   useHTML: true // Allow HTML in title
         },
 		plotOptions:
 		{
 			pie:
 			{
-				showInLegend: true
+				showInLegend: true // Show legend
 			}
 		},
 		tooltip:
 		{
-			formatter: function()
+			formatter: function() // Change tooltip format
 			{
-				return "<b>{0} Accepted submissions</b>".f(this.y);
+				if(this.y > 1)
+					return "<b>{0} Accepted submissions</b>".f(this.y);
+				else
+					return "<b>1 Accepted submission</b>";
 			},
-			useHTML: true
+			useHTML: true // Allow HTML in tooltip
 		},
 		legend:
 		{
-			layout: "vertical",
+			layout: "vertical", // Legend to top-left
 			align: "left",
 			verticalAlign: "top",
 			floating: true,
-			useHTML: true,
-			labelFormatter: function()
+			useHTML: true, // Allow HTML in legend
+			labelFormatter: function() // Change label format
 			{
 				return "{1} ({0})".f(this.y, this.name);
 			}
 		}
 	}});
-	
-	/*$("chart-1").highcharts(
-	{
-		chart:
-		{
-			plotBackgroundColor: null,
-			plotBorderWidth: null,
-			plotShadow: false,
-			type: "pie"
-		},
-		title: 
-		{
-			text: "Accepted submissions over the past two weeks"
-		},
-		plotOptions:
-		{
-			pie: {
-				allowPointSelect: true,
-				cursor: 'pointer',
-				dataLabels: {
-					enabled: false
-				},
-				showInLegend: true
-			}
-		},
-		series: [
-		{
-			name: 'Submissions',
-			colorByPoint: true,
-			data: [
-			{
-				name: "a",
-				y: 2
-			},
-			{
-				name: "b",
-				y: 1
-			}]
-		}]
-	});*/
-	
-	/*$('#chart-1').highcharts({
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-			credits:
-			{
-				enabled: false
-			},
-            title: {
-                text: 'Browser market shares January, 2015 to May, 2015'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
-            },
-            series: [{
-                name: 'Brands',
-                colorByPoint: true,
-                data: [{
-                    name: "Microsoft Internet Explorer",
-                    y: 56.33
-                }, {
-                    name: 'Chrome',
-                    y: 24.03
-                }, {
-                    name: 'Firefox',
-                    y: 10.38
-                }, {
-                    name: 'Safari',
-                    y: 4.77
-                }, {
-                    name: 'Opera',
-                    y: 0.91
-                }, {
-                    name: 'Proprietary or Undetectable',
-                    y: 0.2
-                }]
-            }]
-        });*/
 }

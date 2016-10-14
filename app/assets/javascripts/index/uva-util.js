@@ -1,3 +1,12 @@
+// Set HTTP or HTTPS
+function update_url_protocol()
+{
+	if(window.localtion.protocol == "https:")
+		url_protocol = "https:";
+	else
+		url_protocol = "http:";
+};
+
 // Returns the runtime format for the tracker
 function get_runtime_format(runtime)
 {
