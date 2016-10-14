@@ -1,10 +1,11 @@
 <% require "index_helper" %>
+<% require "json" %>
 
 <div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert", aria-label="close"><span aria-hidden="true">&times;</span></button>
 	This page will be empty if requested over HTTPS ("https://...../") ! Change it to "http://" or just ignore this.
 </div>
 
-<div class="panel panel-default">
+<!--<div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
 		<strong>Next Contests</strong>
 	</div>
@@ -23,24 +24,14 @@
 			</tbody>
 		</table>
 	</div>
-</div>
+</div>-->
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
 		<strong>Top solvers (last 2 weeks)</strong>
 	</div>
 	<div class="panel-body">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>User</th>
-					<th colspan="2">Accepted UVa submissions</th>
-				</tr>
-			</thead>
-			<tbody id="topsolvers">
-			</tbody>
-		</table>
-		<div id="chart-1" style="height: 300px;">
+		<div id="chart-1" style="height: 400px;">
 		</div>
 	</div>
 </div>
@@ -67,20 +58,16 @@
 		<center><button onclick="append_submissions(20);" class="btn btn-lg btn-primary btn-gray" style="margin: 0 0 10px 0;">Show 20 More</button>
 	</div>
 </div>
-<%= javascript_tag "var usernames = #{IndexHelper.format_users_to_js};" %>
-<% if User.exists?(id: session[:user_id]) %>
-	<%= javascript_tag "var current_user = '#{User.find(session[:user_id]).uva}';" %>
-<% else %>
-	<%= javascript_tag "var current_user = null;" %>
-<% end %>
+<%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
 <script>
 	$(function()
 	{
-		last_submissions(function()
-		{
-			top_solvers(14);
-			append_submissions(20);
-		});
-		next_contests();
+		last_submissions(submissions_ready);
 	});
+	
+	function submissions_ready()
+	{
+		top_solvers(14);
+		append_submissions(20);
+	}
 </script>

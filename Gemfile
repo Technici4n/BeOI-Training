@@ -1,8 +1,5 @@
 source 'https://rubygems.org'
 
-# Fucking beautiful charts
-gem 'chartkick'
-
 # BBCode support
 gem 'bb-ruby'
 

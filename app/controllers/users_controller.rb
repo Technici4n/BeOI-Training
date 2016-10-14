@@ -5,10 +5,12 @@ class UsersController < ApplicationController
 	EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
 	UVA_USERNAME_REGEX = /\A[A-Z0-9_]{3,}\z/i
 	
+	# Profile page
 	def profile
 		@user = User.find(session[:user_id])
 	end
 	
+	# Update (profile page) action
 	def update
 		@user = User.find(session[:user_id])
 		
@@ -25,10 +27,12 @@ class UsersController < ApplicationController
 		render "profile"
 	end
 	
+	# Sign up page
 	def signup
 		@user = User.new
 	end
 	
+	# Sign up action
 	def create
 		require "net/http"
 		
@@ -54,12 +58,14 @@ class UsersController < ApplicationController
 		render "signup"
 	end
 	
+	# User logout action
 	def logout
 		session[:user_id] = nil
 		session[:info] = "You successfully signed out."
 		redirect_to "/"
 	end
 	
+	# Login attempt
 	def login_attempt
 		authorized_user = User.authenticate(params[:username_or_email], params[:login_password])
 		if authorized_user

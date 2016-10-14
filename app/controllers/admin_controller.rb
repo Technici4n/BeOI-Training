@@ -3,15 +3,17 @@ require "application_helper"
 class AdminController < ApplicationController
 	before_action :authenticate_user, :admin_check
 	
+	# Main page
 	def index
 		@subforum = Subforum.new
-		if(Event.last)
+		if(Event.last) # Have to use a model just to store 3 fields...
 			@event = Event.last
 		else
 			@event = Event.new
 		end
 	end
 	
+	# New subforum action
 	def new_subforum
 		@subforum = Subforum.new(subforum_params)
 		if validate_existing(@subforum.title, "title") && validate_uniqueness(Subforum, "title", @subforum.title, "title") && validate_existing(@subforum.description, "description") && @subforum.save
@@ -21,6 +23,7 @@ class AdminController < ApplicationController
 		end
 	end
 	
+	# Event update action
 	def update_event
 		if(Event.last)
 			puts event_params[:disabled]
@@ -31,6 +34,7 @@ class AdminController < ApplicationController
 		redirect_to "/admin"
 	end
 	
+	# Clear event action
 	def clear_event
 		User.all.each do |u|
 			u.update(:in_event => false)

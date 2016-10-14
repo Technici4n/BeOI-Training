@@ -8,25 +8,16 @@ module IndexHelper
 		end
 		return format
 	end
-	def self.uva_update_submissions
-		last_subs = uva_fetch_last_submissions(1)
-		if LastSubmission.last == nil || last_subs[0][0] != LastSubmission.last.submission_id
-			last_subs = uva_fetch_last_submissions(500)
-			LastSubmission.destroy_all
-			last_subs[0..499].reverse.each do |s|
-				puts s[4]
-				ls = LastSubmission.new
-				ls.submission_id = s[0]
-				ls.username = s[7]
-				ls.problem = s[1]
-				ls.verdict = s[2]
-				ls.lang = s[5]
-				ls.time = s[3]
-				ls.submit_time = s[4]
-				ls.save
-			end
+	def self.users_to_hash(session)
+		format = {}
+		User.all.each do |u|
+			format[u.id] = ["", u.uva, u.display_name, false]
 		end
-		return LastSubmission.all.reverse
+		if User.exists?(id: session[:user_id])
+			u = User.find(session[:user_id])
+			format[u.id][3] = true
+		end
+		return format
 	end
 	# Sends an HTTP request
 	def self.http_request(dns)

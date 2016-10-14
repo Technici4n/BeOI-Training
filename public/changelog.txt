@@ -1,3 +1,8 @@
+1.0.4
+	- Recoded tracker
+	- Updated top solvers pie chart
+	- Code refactoring
+
 1.0.3
 	- Added navbar link to the advanced UVa tracker
 	- Updated adv. tracker

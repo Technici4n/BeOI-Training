@@ -1,4 +1,4 @@
-var ids;
+/*var ids;
 var id_reqs;
 var last_subs;
 var current_user_name;
@@ -432,4 +432,4 @@ function adv_sub_req(problems, user)
 		else
 			others_subs.push(entry);
 	});
-}
+}*/

@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
 		return out.html_safe
 	end
 	
+	# Returns the success HTML code
 	def get_success_format
 		msg = session[:success]
 		out = ""
@@ -37,6 +38,7 @@ class ApplicationController < ActionController::Base
 		return out.html_safe
 	end
 	
+	# Returns the info HTML code
 	def get_info_format
 		msg = session[:info]
 		out = ""
@@ -63,6 +65,7 @@ class ApplicationController < ActionController::Base
 		end
 	end
 	
+	# Check identity
 	def validate_identity(str1, str2, field_name1, field_name2)
 		if str1 == str2
 			return true
@@ -72,6 +75,7 @@ class ApplicationController < ActionController::Base
 		end
 	end
 	
+	# Check RegEx
 	def validate_regex(str, regex, field_name, format_info = nil)
 		match = regex.match(str)
 		if match && match.to_s.length == str.length
@@ -85,6 +89,7 @@ class ApplicationController < ActionController::Base
 		end
 	end
 	
+	# Check uniqueness for "val" inside the "database_entry" field of the "model_class" model
 	def validate_uniqueness(model_class, database_entry, val, field_name)
 		if !val || model_class.find_by(database_entry.to_sym => val)
 			show_error("This #{field_name} has already been taken.")
@@ -94,6 +99,7 @@ class ApplicationController < ActionController::Base
 		end
 	end
 	
+	# Check if length > 0
 	def validate_existing(str, field_name)
 		if str && str.length > 0
 			return true
@@ -104,6 +110,7 @@ class ApplicationController < ActionController::Base
 	end
 	
 	protected
+		# Keeps the user logged in over multiple pages
 		def authenticate_user(kick = true)
 			if User.exists?(id: session[:user_id])
 				@current_user = User.find(session[:user_id])
@@ -123,6 +130,7 @@ class ApplicationController < ActionController::Base
 				return true
 			end
 		end
+		# Kick user if he is not an admin
 		def admin_check
 			if @current_user.admin != true
 				show_error("You are not allowed to do that.")

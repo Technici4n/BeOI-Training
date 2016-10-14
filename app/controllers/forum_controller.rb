@@ -1,10 +1,11 @@
 class ForumController < ApplicationController
 	before_action :authenticate_user, :only => [:new_subject, :create_subject, :new_message, :create_message]
 
+	# View all forum
 	def index
-		
 	end
 	
+	# View specific subforum
 	def show
 		@subforum = Subforum.find(params[:id])
 		@subforum.subjects.sort_by &:created_at#{|s| m = s.forum_messages[s.forum_messages.count - 1]
@@ -15,6 +16,7 @@ class ForumController < ApplicationController
 		@subject = Subject.new
 	end
 	
+	# Create subject action
 	def create_subject
 		# Title and text can't be blank
 		if !(validate_length(params[:title], "title", 3, 50) && validate_length(params[:message_text], "message", 1, 8192))
@@ -39,23 +41,27 @@ class ForumController < ApplicationController
 		end
 	end
 	
+	# Create subject page
 	def new_subject
 		@subforum = Subforum.find(params[:id])
 		params[:message_text] ||= ""
 		params[:title] ||= ""
 	end
 	
+	# View specific subject
 	def show_subject
 		@subject = Subject.find(params[:subject_id])
 		@subforum = @subject.subforum
 	end
 	
+	# New message page
 	def new_message
 		@forum_message = ForumMessage.new
 		@subject = Subject.find(params[:subject_id])
 		@subforum = @subject.subforum
 	end
 	
+	# New message action
 	def create_message
 		@forum_message = ForumMessage.new(forum_message_params)
 		@forum_message.subject = Subject.find(params[:subject_id])
