@@ -31,6 +31,16 @@
 		<strong>Top solvers</strong>
 	</div>
 	<div class="panel-body">
+		<center>
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-default active" id="option1">
+					<input type="radio" name="options" autocomplete="off" checked> All the users (default)
+				</label>
+				<label class="btn btn-default" id="option2">
+					<input type="radio" name="options" autocomplete="off"> BeCP contestants only
+				</label>
+			</div>
+		</center>
 		<div id="chart-1" style="height: 400px;">
 		</div>
 	</div>
@@ -70,4 +80,14 @@
 		top_solvers(14);
 		append_submissions(20);
 	}
+	
+	$('#option1').click(function()
+	{
+		top_solvers(14);
+	});
+	
+	$('#option2').click(function()
+	{
+		top_solvers(14, true);
+	});
 </script>

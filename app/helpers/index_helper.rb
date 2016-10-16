@@ -1,17 +1,10 @@
 require "net/http"
 
 module IndexHelper
-	def self.format_users_to_js
-		format = []
-		User.all.each do |u|
-			format << [u.uva, u.display_name, u.is_contestant]
-		end
-		return format
-	end
 	def self.users_to_hash(session)
 		format = {}
 		User.all.each do |u|
-			format[u.id] = ["", u.uva, u.display_name, false]
+			format[u.id] = ["", u.uva, u.display_name, false, u.is_contestant]
 		end
 		if User.exists?(id: session[:user_id])
 			u = User.find(session[:user_id])

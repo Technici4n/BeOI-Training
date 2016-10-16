@@ -3,8 +3,10 @@
 */
 
 // Main function
-function top_solvers(days)
+function top_solvers(days, contestants_only)
 {
+	if(contestants_only === "undefined")
+		contestants_only = false;
 	var mintime = $.now()/1000 - days*3600*24;
 	
 	// 1. Get all unique AC submissions for each user
@@ -26,7 +28,8 @@ function top_solvers(days)
 	var counts = [];
 	for(var key in ac_submissions)
 	{
-		counts.push([users[key][2], Object.keys(ac_submissions[key]).length]);
+		if(!contestants_only || users[key][4] == true)
+			counts.push([users[key][2], Object.keys(ac_submissions[key]).length]);
 	}
 	counts.sort(function(a, b)
 	{
