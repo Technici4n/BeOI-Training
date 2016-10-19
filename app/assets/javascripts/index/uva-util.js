@@ -1,3 +1,21 @@
+// "Fetch UVa Username"
+function fetch_uva_id()
+{
+	if($('#user_uva').val() != "")
+	{
+		$.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}".f($('#user_uva').val()), function (data)
+		{
+			if(data != 0)
+			{
+				$.getJSON("http://uhunt.felix-halim.net/api/subs-user-last/{0}/0".f(data), function (data2)
+				{
+					$('#user_display_name').val(data2["name"]);
+				});
+			}
+		});
+	}
+}
+
 // Set HTTP or HTTPS
 function update_url_protocol()
 {
