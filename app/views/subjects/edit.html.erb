@@ -1,0 +1,52 @@
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Forum</strong>
+	</div>
+	<div class="panel-body">
+		<div>
+			<ol class="breadcrumb" style="background-color: white; margin: 0">
+				<li><span class="icon-home"></span> <a href="/subjects/">Home</a></li>
+				<li class="active"><a href="/subjects/<%= @subject.id %>"><%= @subject.title %></a></li>
+				<li class="active">Edit message</li>
+			</ol>
+		</div>
+		<hr style="margin: 3px 0 3px;">
+		<div class="message-display" id="dynamical-preview" style="visibility: hidden; position: absolute;">
+			<div class="header">
+				<span class="time"></span>
+				<span class="tools" style="float: right;">
+					<span class="edit-message" title="What do you think to be doing ?"></span>
+					<span class="code-text-swapper" title="Do you really need this to view the code you just typed ?"></span>
+				</span>
+			</div>
+			<div class="body">
+				<div class="information"><%= UsersHelper.display_name(User.find(session[:user_id])) %></div>
+				<div class="message"></div>
+			</div>
+		</div>
+		<%= form_for @message, url: "/subjects/edit/#{@message.id}", method: :patch do |f| %>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "New Message" %>
+				<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
+			</div>
+			
+			<center><%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary", :id => "forum_message_submit" %></center>
+			
+		<% end %>
+	</div>
+</div>
+
+<!-- Preview script -->
+<script type="text/javascript">
+$('#forum_message_text').on("input", function(e){handle_message_changes(e, false);});
+$(function() // Already update once because there is text in the message
+{
+	handle_message_changes(null, false);
+});
+</script>
+
+<!-- View code script -->
+<script type="text/javascript">
+$(register_code_text_swappers);
+</script>

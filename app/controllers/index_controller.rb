@@ -4,4 +4,7 @@ class IndexController < ApplicationController
 	
 	def tracker
 	end
+	
+	def test
+	end
 end

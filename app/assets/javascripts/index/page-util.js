@@ -1,5 +1,5 @@
 /*
-	Some JS elements used in HTML
+	Some JS elements used in HTML (mostly in the forum)
 */
 
 function spoiler_click(id)
@@ -79,4 +79,55 @@ function cursor_insert(before_text, after_text, elem_id)
 			poivre.value = poivre.value + before_text;
 		}
 	}
+}
+
+// Preview script for the forum
+function handle_message_changes(e, should_remove_preview_if_empty_message)
+{
+	if(typeof should_remove_preview_if_empty_message === "undefined")
+		should_remove_preview_if_empty_message = true;
+	if($('#forum_message_text').val() == "" && should_remove_preview_if_empty_message) // If empty message -> hide everything
+	{
+		$('#dynamical-preview').css('position', 'absolute');
+		$('#dynamical-preview').css('visibility', 'hidden');
+		$('#forum_message_submit').prop("disabled", false);
+	}
+	else // Else show everything and update time, message and code attribute + pretty print eventual code
+	{
+		$('#dynamical-preview').css('position', 'relative');
+		$('#dynamical-preview').css('visibility', 'visible');
+		$('#dynamical-preview .message').attr("data-swapped", $('#forum_message_text').val());
+		$('#dynamical-preview .message').html(BBCodeParser.parse($('#forum_message_text').val()));
+		$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
+		PR.prettyPrint();
+		$('#dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
+	}
+	update_urls();
+}
+
+// View/hide code button for the forum
+function register_code_text_swappers()
+{
+	var id = 0;
+	$(".code-text-swapper").each(function(index)
+	{
+		var $button = $(this);
+		$button.attr("id", "code-text-swapper{0}".f(id));
+		var num = id;
+		$button.click(function(e)
+		{
+			var $message = $("#message{0}".f(num));
+			console.log($message);
+			var tmp = $message.html();
+			$message.html($message.attr("data-swapped"));
+			$message.attr("data-swapped", tmp);
+		});
+		++id;
+	});
+	id = 0;
+	$(".message-display .message").each(function(index)
+	{
+		$(this).attr("id", "message{0}".f(id));
+		++id;
+	});
 }

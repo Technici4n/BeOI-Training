@@ -2,8 +2,8 @@
 
 one:
   text: MyString
-  message_date: 2016-08-23
+  author_id: 1
 
 two:
   text: MyString
-  message_date: 2016-08-23
+  author_id: 1

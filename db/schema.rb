@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161003160758) do
+ActiveRecord::Schema.define(version: 20161023180004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20161003160758) do
     t.integer  "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
     t.integer  "subject_id"
   end
 
@@ -43,18 +44,13 @@ ActiveRecord::Schema.define(version: 20161003160758) do
     t.datetime "updated_at",    null: false
   end
 
-  create_table "subforums", force: :cascade do |t|
-    t.string   "title"
-    t.string   "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
   create_table "subjects", force: :cascade do |t|
     t.string   "title"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "subforum_id"
+    t.integer  "category"
+    t.boolean  "pinned"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "views"
   end
 
   create_table "users", force: :cascade do |t|
@@ -63,12 +59,14 @@ ActiveRecord::Schema.define(version: 20161003160758) do
     t.string   "email"
     t.string   "hashed_password"
     t.string   "salt"
-    t.boolean  "admin",           null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.boolean  "admin",            null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.string   "display_name"
     t.boolean  "is_contestant"
     t.boolean  "in_event"
+    t.datetime "last_forum_visit"
+    t.integer  "unread_subjects"
   end
 
 end

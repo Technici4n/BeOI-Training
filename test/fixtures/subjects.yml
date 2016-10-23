@@ -2,8 +2,10 @@
 
 one:
   title: MyString
-  last_date: 2016-08-23
+  category: 1
+  pinned: false
 
 two:
   title: MyString
-  last_date: 2016-08-23
+  category: 1
+  pinned: false

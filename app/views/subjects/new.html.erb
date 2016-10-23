@@ -1,0 +1,81 @@
+<% require "application_helper" %>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Forum</strong>
+	</div>
+	<div class="panel-body">
+		<%= form_for :subject, url: "/subjects/new" do |f| %>
+		
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Title" %>
+				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "max-width: 500px;" %>
+			</div>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Message" %>
+				<%= text_area_tag :text, @message.text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
+			</div>
+			
+			<center><%= f.submit :class => "btn btn-lg btn-primary", :id => "subject_submit" %></center>
+		<% end %>
+		
+		<div id="subject-dynamical-preview" style="visibility: hidden; position: absolute;">
+			<div>
+				<ol class="breadcrumb" style="background-color: white; margin: 0">
+					<li><span class="icon-home"></span> <a href="/subjects/">Home</a></li>
+					<li class="active subject-title"></li>
+				</ol>
+			</div>
+			<hr style="margin: 3px 0 3px;">
+			<h3 class="subject-title"></h3>
+			Started by <%= UsersHelper.display_name(@current_user) %>, <span style="color: #888888">the <span class="time"></span></span>
+			<!-- Message preview -->
+			<div class="message-display" id="dynamical-preview">
+				<div class="header">
+					<span class="time"></span>
+					<span class="tools" style="float: right;">
+						<span class="edit-message" title="Editing an unexisting message ? Really..."></span>
+						<span class="code-text-swapper" title="Do you really need this to view the code you just typed ?"></span>
+					</span>
+				</div>
+				<div class="body">
+					<div class="information"><%= UsersHelper.display_name(@current_user) %></div>
+					<div class="message"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Preview script -->
+<script type="text/javascript">
+function update_preview()
+{
+	if($("#subject_title").val() == "")
+	{
+		$('#subject-dynamical-preview').css('position', 'absolute');
+		$('#subject-dynamical-preview').css('visibility', 'hidden');
+		$('#subject_submit').prop("disabled", false);
+	}
+	else
+	{
+		$('#subject-dynamical-preview').css('position', 'relative');
+		$('#subject-dynamical-preview').css('visibility', 'visible');
+		$('#subject-dynamical-preview .message').attr("data-swapped", $('#text').val());
+		$('#subject-dynamical-preview .message').html(BBCodeParser.parse($('#text').val()));
+		$('#subject_submit').prop("disabled", BBCodeParser.errors);
+		PR.prettyPrint();
+		$('#subject-dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
+		$('#subject-dynamical-preview .subject-title').html($("#subject_title").val());
+	}
+	update_urls();
+}
+$("#subject_title").on("input", update_preview);
+$("#text").on("input", update_preview);
+</script>
+
+<!-- View code script -->
+<script type="text/javascript">
+$(register_code_text_swappers);
+</script>

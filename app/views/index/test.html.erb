@@ -1,0 +1,11 @@
+<div id="text">[noparse][b]Hi[/b][/noparse]</div>
+<button type="button" id="btn">CLICK ME</button>
+
+<script type="text/javascript">
+$("#btn").click(button_click);
+
+function button_click()
+{
+	$("#text").html(BBCodeParser.parse($("#text").html()));
+}
+</script>

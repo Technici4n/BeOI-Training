@@ -1,4 +1,4 @@
-// "Fetch UVa Username"
+// "Fetch From UVa" (User's display_name)
 function fetch_uva_id()
 {
 	if($('#user_uva').val() != "")

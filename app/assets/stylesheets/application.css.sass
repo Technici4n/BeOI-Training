@@ -11,10 +11,12 @@
 .orange
 	color: #FF8C19
 
+a
+	color: 3c6994
+
 body
-	max-width: 70%
-	margin: 0 auto
 	background-color: #CBE5F8
+	padding-top: 70px // To avoid having the navbar overriding other content
 	
 .spoiler-btn
 	padding: 7px
@@ -37,11 +39,11 @@ pre.prettyprint
 	max-width: 600
 	white-space: pre-wrap
 	
-.message
-	word-break: break-all
-	
 thead
 	background-color: #0095b6
+
+td.right
+	float: right
 	
 .panel-heading
 	color: #235064
@@ -50,9 +52,134 @@ thead
 .checkbox input[type="checkbox"]
 	position: relative
 	margin-left: 0
+
+.user-displayname
+	font-weight: bold
+	color: #386173
 	
 .form-label
 	font-weight: bold
+	
+.subjects-table
+	width: 100%
+	tbody
+		width: inherit
+		tr
+			h5
+				height: 20px
+			width: inherit
+			td:nth-of-type(1)
+				width: 3%
+				.new-message
+					@extend .glyphicon
+					@extend .glyphicon-hand-right
+				
+			td:nth-of-type(2)
+				width: 62%
+				margin-right: 2%
+				padding-left: 10px
+		
+			td:nth-of-type(3)
+				width: 8%
+				margin-right: 2%
+				padding-right: 1%
+				text-align: right
+		
+			td:nth-of-type(4)
+				width: 20%
+				text-align: left
+				padding-right: 10px
+
+		tr:nth-of-type(even)
+			color: #888888
+		tr:nth-of-type(4n + 1), tr:nth-of-type(4n + 2)
+			background-color: #FFFFFF
+		tr:nth-of-type(4n + 3), tr:nth-of-type(4n)
+			background-color: #F6F6F6
+		tr:nth-of-type(2n)
+			td
+				padding-bottom: 10px
+		tr:nth-of-type(2n+1)
+			td
+				padding-top: 5px
+
+.message-display
+	width: auto
+	margin: 15px 0 15px
+	border: 1px solid #F6F6F6
+	.header
+		width: inherit
+		background-color: #CBE5F8
+		padding: 10px
+		color: #444444
+		font-size: 13px
+		border-bottom: 1px solid #F6F6F6
+		.tools
+			.edit-message
+				@extend .glyphicon
+				@extend .glyphicon-pencil
+				color: #444444 // Override the link's normal color
+			.code-text-swapper
+				@extend .glyphicon
+				@extend .glyphicon-wrench
+			.edit-message, .code-text-swapper
+				cursor: pointer
+				cursor: hand
+	.body
+		width: inherit
+		overflow: hidden
+		.information
+			text-align: center
+			float: left
+			width: 15%
+			height: 100%
+		.message
+			float: right
+			width: 85%
+			white-space: pre-wrap
+		.information, .message
+			padding: 20px
+
+.smiley
+	width: 20px
+	height: 20px
+
+// Forum icons
+$iconRadius: 20px
+.icon-pinned-little
+	padding: 3px 0 0 3px
+	@extend .glyphicon
+	@extend .glyphicon-pushpin
+	width: $iconRadius
+	height: $iconRadius
+	background: green
+	border-radius: $iconRadius/2
+
+$iconRadius: 32px
+.icon-pinned-big
+	padding: 3px 0 0 4px
+	@extend .glyphicon
+	@extend .glyphicon-pushpin
+	width: $iconRadius
+	height: $iconRadius
+	background: green
+	border-radius: $iconRadius/2
+	
+.icon-home
+	padding: 3px 0 0 3px
+	@extend .glyphicon
+	@extend .glyphicon-home
+
+// BBCode tags
+.bb-b
+	font-weight: bold
+.bb-i
+	font-style: italic
+.bb-u
+	text-decoration: underline
+.bb-s
+	text-decoration: line-through
+
 
 /* 
  * 	Navbar
@@ -60,16 +187,16 @@ thead
 .navbar-logo
 	width: 35px
 	height: 30px
-	
-	#Navbar
-$bgDefault: #EEEEEE
+
+$bgDefault: #F3F3F3
 $bgHighlight: #5e5e5e
+$colBorder: #BEBEBE
 $colDefault: #235064
 $colHighlight: #aec9d5
 $dropDown: true
 .navbar-default
 	background-color: $bgDefault
-	border-color: $bgHighlight
+	border-color: $colBorder
 	.navbar-brand
 		color: $colDefault
 		&:hover, &:focus

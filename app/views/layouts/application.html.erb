@@ -22,10 +22,12 @@
 
 	<body>
 		<%= render "shared/navbar" %>
-		<%= render "shared/errors" %>
-		<%= render "shared/info" %>
-		<%= render "shared/success" %>
-		<%= yield %>
-		<%= render "shared/footer" %>
+		<div class="container">
+			<%= render "shared/errors" %>
+			<%= render "shared/info" %>
+			<%= render "shared/success" %>
+			<%= yield %>
+			<%= render "shared/footer" %>
+		</div>
 	</body>
 </html>

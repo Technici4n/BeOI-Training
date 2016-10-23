@@ -4,28 +4,6 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size: 24px;">
-		<span style="color:#235064;"><strong>Create Subforum</strong></span>
-	</div>
-	<div class="panel-body">
-	<%= form_for @subforum, url: {action: "new_subforum"} do |f| %>
-	
-		<div class="form-group">
-			<%= f.label :title %><br/>
-			<%= f.text_field :title, :class => "form-control" %>
-		</div>
-		
-		<div class="form-group">
-			<%= f.label :description %><br/>
-			<%= f.text_area :description, :class => "form-control" %>
-		</div>
-		
-		<%= f.submit :class => "btn btn-primary" %>
-	<% end %>
-	</div>
-</div>
-
-<div class="panel panel-default">
-	<div class="panel-heading" style="font-size: 24px;">
 		<span style="color:#235064;"><strong>Current Event (Advanced Tracker)</strong></span>
 	</div>
 	<div class="panel-body">

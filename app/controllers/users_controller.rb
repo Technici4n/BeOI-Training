@@ -44,6 +44,8 @@ class UsersController < ApplicationController
 						if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
 							@user.is_contestant = false
 							@user.in_event = false
+							@user.last_forum_visit = Time.now
+							@user.unread_subjects = 0
 							if @user.save
 								session[:success] = "Your account has been created. You are now logged in. Welcome, <strong>#{@user.display_name}</strong> !"
 								session[:user_id] = @user.id

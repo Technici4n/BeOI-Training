@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SubforumTest < ActiveSupport::TestCase
+class SubjectsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

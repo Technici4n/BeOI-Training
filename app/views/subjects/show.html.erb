@@ -1,0 +1,83 @@
+<% require "application_helper" %>
+<% require "users_helper" %>
+
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size:24px;">
+		<strong>Forum</strong>
+	</div>
+	<div class="panel-body">
+		<div>
+			<ol class="breadcrumb" style="background-color: white; margin: 0">
+				<li><span class="icon-home"></span> <a href="/subjects/">Home</a></li>
+				<li class="active"><%= @subject.title %></li>
+			</ol>
+		</div>
+		<hr style="margin: 3px 0 3px;">
+		<div>
+			<h3>
+				<% if @subject.pinned? %>
+					<%= "<span title=\"Pinned\" class = \"icon-pinned-big\"></span>".html_safe %>
+				<% end %>
+				<%= @subject.title %>
+			</h3>
+			Started by <%= UsersHelper.display_name(@subject.forum_messages.first.user) %>, <span style="color: #888888">the <%= ApplicationHelper.datetime_to_s(@subject.forum_messages.first.created_at) %></span>
+			<% if @current_user && @current_user.admin %>
+				<%= link_to "(Toggle pinned)", "/subjects/#{@subject.id}/toggle_pinned", method: :patch %>
+			<% end %>
+		</div>
+		<!-- All messages -->
+		<% @subject.forum_messages.sort_by{|m| m.created_at}.each do |m| %>
+			<div class="message-display">
+				<div class="header">
+					<span class="time"><%= ApplicationHelper.datetime_to_s(m.created_at) %></span>
+					<span class="tools" style="float: right;">
+						<% if m.user_id == session[:user_id] || (session[:user_id] && User.find(session[:user_id]).admin) %>
+							<a href="/subjects/edit/<%= m.id %>"><span class="edit-message" title="Edit message"></span></a>
+						<% end %>
+						<span class="code-text-swapper" title="Show/hide code"></span>
+					</span>
+				</div>
+				<div class="body">
+					<div class="information"><%= UsersHelper.display_name(m.user) %></div>
+					<div class="message bb-code"><%= m.text %></div>
+				</div>
+			</div>
+		<% end %>
+		<!-- New message -->
+		<% if session[:user_id] %>
+			<div class="message-display" id="dynamical-preview" style="visibility: hidden; position: absolute;">
+				<div class="header">
+					<span class="time"></span>
+					<span class="tools" style="float: right;">
+						<span class="edit-message" title="Editing an unexisting message ? Really..."></span>
+						<span class="code-text-swapper" title="Do you really need this to view the code you just typed ?"></span>
+					</span>
+				</div>
+				<div class="body">
+					<div class="information"><%= UsersHelper.display_name(User.find(session[:user_id])) %></div>
+					<div class="message"></div>
+				</div>
+			</div>
+			<%= form_for :forum_message, url: "/subjects/#{@subject.id}" do |f| %>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "New Message" %>
+				<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
+			</div>
+			
+			<center><%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary", :id => "forum_message_submit" %></center>
+		<% end %>
+		<% end %>
+	</div>
+</div>
+
+<!-- Preview script -->
+<script type="text/javascript">
+$('#forum_message_text').on("input", handle_message_changes);
+</script>
+
+<!-- View code script -->
+<script type="text/javascript">
+// Assign each button its own id...
+$(register_code_text_swappers);
+</script>

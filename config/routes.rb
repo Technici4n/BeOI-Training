@@ -8,23 +8,24 @@ Rails.application.routes.draw do
 	get "/users/profile", to: "users#profile"
 	patch "/users/profile", to: "users#update"
 	
+	# Forum
+	get "/subjects", to: "subjects#index"
+	get "/subjects/new", to: "subjects#new"
+	post "/subjects/new", to: "subjects#create"
+	get "/subjects/:subject_id", to: "subjects#show"
+	post "/subjects/:subject_id", to: "subjects#create_message"
+	get "/subjects/edit/:message_id", to: "subjects#edit"
+	patch "/subjects/edit/:message_id", to: "subjects#update"
+	patch "/subjects/:subject_id/toggle_pinned", to: "subjects#toggle_pinned"
+	
 	# Admin tools
 	get "/admin", to: "admin#index"
-	post "/admin/new_subforum", to: "admin#new_subforum"
 	patch "/admin/update_event", to: "admin#update_event"
 	delete "/admin/clear_event", to: "admin#clear_event"
-	
-	# Forum
-	get "/forum", to: "forum#index"
-	get "/forum/:id", to: "forum#show"
-	post "/forum/:id/create_subject", to: "forum#create_subject"
-	get "/forum/:id/new", to: "forum#new_subject"
-	get "/forum/subjects/:subject_id", to: "forum#show_subject"
-	get "/forum/subjects/:subject_id/new", to: "forum#new_message"
-	post "/forum/subjects/:subject_id/create", to: "forum#create_message"
 
 	# Misc.
 	get "/tracker", to: "index#tracker"
+	get "/test", to: "index#test" if Rails.env.development?
 	
 	root "index#index"
 	
