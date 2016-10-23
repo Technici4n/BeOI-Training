@@ -172,7 +172,7 @@ function get_smiley_callback(unicode, alt)
 // All registered smileys
 var smileys =
 {
-	"1f600": [":D", ":-D", "happy"],
+	"1f600": [":D", ":-D", "veryhappy"],
 	"1f607": ["o)", "O)", "o-)", "O-)", "angel"],
 	"1f608": ["3-[", "3[", "3-)", "3)", "devil"],
 	"1f609": [";)", ";-)", "wink"],
@@ -181,7 +181,7 @@ var smileys =
 	"1f61e": [":(", ":-(", "sad"],
 	"1f62d": [":'(", "crying"],
 	"1f632": [":o", ":O", ":-o", ":-O", "oh"],
-	"1f642": [":)", ":-)", "veryhappy"]
+	"1f642": [":)", ":-)", "happy"]
 };
 for(var key in smileys)
 {
