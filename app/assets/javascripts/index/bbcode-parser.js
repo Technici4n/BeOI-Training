@@ -5,7 +5,6 @@ var BBCodeParser =
 	str: "", // Unparsed text
 	text: [], // Parsed text
 	errors: false,
-	remove_html: true, // Should replace all "<" and ">" by "&lt;" and "&gt;"
 	add_tag: function(tag, callback, need_closing_tag, no_inside_parsing)
 	{
 		if(no_inside_parsing == undefined) // Check for optional parameters
@@ -43,10 +42,6 @@ var BBCodeParser =
 		BBCodeParser.errors =  false;
 		try
 		{
-			if(BBCodeParser.remove_html)
-			{
-				unparsed = unparsed.replace("<", "&lt;").replace(">", "&gt;");
-			}
 			BBCodeParser.str = unparsed;
 			BBCodeParser.text = [];
 			var str = BBCodeParser.str;
@@ -69,6 +64,8 @@ var BBCodeParser =
 						pos = match[0]; // Check
 						if(str[pos] == ']' && match[1] in BBCodeParser.tags) // Does this tag exist ?
 						{
+							if(stack.length <= 0)
+								throw 'Unexpected closing tag: "/{0}".'.f(match[1]);
 							var top = stack.pop();
 							if(top[0] == match[1]) // Is this tag correctly aligned ?
 							{
@@ -179,7 +176,7 @@ var smileys =
 	"1f610": [":|", ":-|", "-_-", "neutral"],
 	"1f61b": [":P", ":p", ":-P", ":-p", "tongue"],
 	"1f61e": [":(", ":-(", "sad"],
-	"1f62d": [":&#39;(", "crying"],
+	"1f62d": [":'(", ":&#39;(", "crying"],
 	"1f632": [":o", ":O", ":-o", ":-O", "oh"],
 	"1f642": [":)", ":-)", "happy"]
 };

@@ -96,10 +96,10 @@ function handle_message_changes(e, should_remove_preview_if_empty_message)
 	{
 		$('#dynamical-preview').css('position', 'relative');
 		$('#dynamical-preview').css('visibility', 'visible');
-		// Escape unescaped things (uses the Rails RegExp for consistency)
+		// Escape things (uses the Rails RegExp for consistency)
 		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
 		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
-		var text = $('#forum_message_text').val().replace(HTML_ESCAPE_ONCE_REGEXP, function(c){return HTML_ESCAPE[c];});
+		var text = $('#forum_message_text').val().replace(/[&"><']/g, function(c){return HTML_ESCAPE[c];});
 		$('#dynamical-preview .message').attr("data-swapped", text);
 		$('#dynamical-preview .message').html(BBCodeParser.parse(text));
 		$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
