@@ -39,7 +39,7 @@
 				</div>
 				<div class="body">
 					<div class="information"><%= UsersHelper.display_name(m.user) %></div>
-					<div class="message bb-code"><%= m.text %></div>
+					<div class="message bb-code"><%= (html_escape_once m.text).html_safe %></div>
 				</div>
 			</div>
 		<% end %>
