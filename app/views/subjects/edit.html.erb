@@ -13,7 +13,7 @@
 		<hr style="margin: 3px 0 3px;">
 		<div class="message-display" id="dynamical-preview" style="visibility: hidden; position: absolute;">
 			<div class="header">
-				<span class="time"></span>
+				<span><%= ApplicationHelper.datetime_to_s(@message.created_at)%></span>
 				<span class="tools" style="float: right;">
 					<span class="edit-message" title="What do you think to be doing ?"></span>
 					<span class="code-text-swapper" title="Do you really need this to view the code you just typed ?"></span>
@@ -22,6 +22,7 @@
 			<div class="body">
 				<div class="information"><%= UsersHelper.display_name(User.find(session[:user_id])) %></div>
 				<div class="message"></div>
+				<div class="last-edition">Last edited the <span class="time"></span>.</div>
 			</div>
 		</div>
 		<%= form_for @message, url: "/subjects/edit/#{@message.id}", method: :patch do |f| %>

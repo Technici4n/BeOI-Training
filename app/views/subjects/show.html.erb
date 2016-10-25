@@ -40,6 +40,9 @@
 				<div class="body">
 					<div class="information"><%= UsersHelper.display_name(m.user) %></div>
 					<div class="message bb-code"><%= h m.text %></div>
+					<% if m.created_at != m.updated_at %>
+						<div class="last-edition">Last edited the <%= ApplicationHelper.datetime_to_s(m.updated_at) %>.</div>
+					<% end %>
 				</div>
 			</div>
 		<% end %>
