@@ -16,7 +16,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% Subject.order(pinned: :desc, created_at: :desc).each do |s| %>
+				<% 	def to_i(bool)
+						if bool
+							return 1
+						else
+							return 0
+						end
+					end %>
+				<% Subject.all.sort_by{|s| -2000000000*to_i(s.pinned?)+2000000000-s.forum_messages.last.created_at.to_i}.each do |s| %>
 					<% fm = s.forum_messages %><!-- To avoid those 100ths of SQL requests -->
 					<% last_msg = fm.last %>
 					<% first_msg = fm.first %>
