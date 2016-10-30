@@ -65,7 +65,7 @@
 			<tbody id="lastsubmissions">
 			</tbody>
 		</table>
-		<center><button onclick="append_submissions(20);" class="btn btn-lg btn-primary btn-gray" style="margin: 0 0 10px 0;">Show 20 More</button>
+		<center><button onclick="UvaTracker.append_submissions(20);" class="btn btn-lg btn-primary btn-gray" style="margin: 0 0 10px 0;">Show 20 More</button>
 	</div>
 </div>
 <%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
