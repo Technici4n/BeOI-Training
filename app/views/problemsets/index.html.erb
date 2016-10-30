@@ -27,7 +27,7 @@
 						<% case pb.website 
 						   when 0 %> <!-- UVa -->
 							<tr class="uva-problem">
-								<td><a href="https://uva.onlinejudge.org/">UVa Onlinejudge</a></td>
+								<td><a target="_blank" href="https://uva.onlinejudge.org/">UVa Onlinejudge</a></td>
 								<td class="problem-format" data-pnum="<%= pb.handle %>">Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
@@ -36,7 +36,7 @@
 							</tr>
 						<% when 1 %> <!-- Codeforces -->
 							<tr class="codeforces-problem">
-								<td><a href="http://codeforces.com/">Codeforces</a></td>
+								<td><a target="_blank" href="http://codeforces.com/">Codeforces</a></td>
 								<td class="problem-format" data-phandle="<%= pb.handle %>">Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
