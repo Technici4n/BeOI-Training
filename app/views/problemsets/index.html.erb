@@ -31,7 +31,7 @@
 								<td class="problem-format" data-pnum="<%= pb.handle %>">Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
-									<td class="user-submission" data-user="<%= u.id %>">-</td>
+									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
 								<% end %>
 							</tr>
 						<% when 1 %> <!-- Codeforces -->
@@ -40,7 +40,7 @@
 								<td class="problem-format" data-phandle="<%= pb.handle %>">Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
-									<td class="user-submission" data-user="<%= u.id %>">-</td>
+									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
 								<% end %>
 							</tr>
 						<% end %>
@@ -83,9 +83,9 @@ function show_uva()
 		{
 			var res = UvaTracker.get_problem_status($(this).attr("data-user"), pid);
 			if(res == 1)
-				$(this).html('<span class="glyphicon glyphicon-ok green"></span>');
+				$(this).html('<span class="glyphicon glyphicon-ok green" title="Accepted"></span>');
 			else if(res == 0)
-				$(this).html('<span class="glyphicon glyphicon-remove red"></span>')
+				$(this).html('<span class="glyphicon glyphicon-remove red" title="Tried"></span>')
 		});
 	});
 }
@@ -102,9 +102,9 @@ function show_codeforces()
 		{
 			var res = CodeforcesTracker.get_problem_status($(this).attr("data-user"), handle);
 			if(res == 1)
-				$(this).html('<span class="glyphicon glyphicon-ok green"></span>');
+				$(this).html('<span class="glyphicon glyphicon-ok green" title="Accepted"></span>');
 			else if(res == 0)
-				$(this).html('<span class="glyphicon glyphicon-remove red"></span>')
+				$(this).html('<span class="glyphicon glyphicon-remove red" title="Tried"></span>')
 		});
 	});
 }
