@@ -1,6 +1,7 @@
 <% users = User.where(is_contestant: true).all.each do |u| %>
 	<% u.initials = u.display_name.split.map{|s| s[0]}.map(&:capitalize).join("") unless u.initials && u.initials != "" %>
 <% end %>
+<% users = users.sort_by{|u| u.initials} %>
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size: 24px;">
 		<span style="color:#235064;"><strong>Problems</strong>
