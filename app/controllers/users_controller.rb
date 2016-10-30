@@ -14,17 +14,15 @@ class UsersController < ApplicationController
 	def update
 		@user = User.find(session[:user_id])
 		
-		if validate_regex(@user.uva, UVA_USERNAME_REGEX, "UVa username") && (params[:user][:uva] == @user.uva || validate_uniqueness(User, "uva", params[:user][:uva], "UVa username"))
-			if validate_length(@user.display_name, "displayed name", 3, 40) && (params[:user][:display_name] == @user.display_name || validate_uniqueness(User, "display_name", params[:user][:display_name], "displayed name"))
-				if @user.update(update_user_params)
-					session[:success] = "You account has successfully been updated."
-					redirect_to "/users/profile"
-					return
-				end
+		if @user.update(update_user_params)
+			session[:success] = "You account has successfully been updated."
+			redirect_to "/users/profile"
+		else
+			@user.errors.full_messages.each do |m|
+				show_error(m)
 			end
+			render "profile"
 		end
-		
-		render "profile"
 	end
 	
 	# Sign up page
@@ -37,27 +35,20 @@ class UsersController < ApplicationController
 		require "net/http"
 		
 		@user = User.new(new_user_params)
-		if validate_length(@user.username, "username", 3, 40) && validate_uniqueness(User, "username", @user.username, "username")
-			if validate_regex(@user.uva, UVA_USERNAME_REGEX, "UVa username") && validate_uniqueness(User, "uva", @user.uva, "UVa username")
-				if validate_length(@user.display_name, "displayed name", 3, 40) && validate_uniqueness(User, "display_name", @user.display_name, "displayed name")
-					if validate_regex(@user.email, EMAIL_REGEX, "email address") && validate_uniqueness(User, "email", @user.email, "email")
-						if validate_length(@user.password, "password", 4) && validate_identity(@user.password_confirmation, @user.password, "password confirmation", "password")
-							@user.is_contestant = false
-							@user.in_event = false
-							@user.last_forum_visit = Time.now
-							@user.unread_subjects = 0
-							if @user.save
-								session[:success] = "Your account has been created. You are now logged in. Welcome, <strong>#{@user.display_name}</strong> !"
-								session[:user_id] = @user.id
-								redirect_to "/"
-								return
-							end
-						end
-					end
-				end
+		@user.is_contestant = false
+		@user.in_event = false
+		@user.last_forum_visit = Time.now
+		@user.unread_subjects = 0
+		if @user.save
+			session[:success] = "Your account has been created. You are now logged in. Welcome, <strong>#{@user.display_name}</strong> !"
+			session[:user_id] = @user.id
+			redirect_to "/"
+		else
+			@user.errors.full_messages.each do |m|
+				show_error(m)
 			end
+			render "signup"
 		end
-		render "signup"
 	end
 	
 	# User logout action
@@ -82,10 +73,10 @@ class UsersController < ApplicationController
 	
 	private
 		def new_user_params
-			params.require(:user).permit(:username, :uva, :display_name, :email, :admin, :inscription_date, :password, :password_confirmation)
+			params.require(:user).permit(:username, :uva, :codeforces, :display_name, :initials, :email, :admin, :inscription_date, :password, :password_confirmation)
 		end
 		
 		def update_user_params
-			params.require(:user).permit(:uva, :display_name, :is_contestant, :in_event)
+			params.require(:user).permit(:uva, :codeforces, :display_name, :initials, :is_contestant, :in_event)
 		end
 end

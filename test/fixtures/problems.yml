@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 1
+  handle: 
+  problemset_id: 1
+
+two:
+  type: 1
+  handle: 
+  problemset_id: 1

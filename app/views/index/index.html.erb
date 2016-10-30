@@ -72,22 +72,22 @@
 <script>
 	$(function()
 	{
-		last_submissions(submissions_ready);
+		UvaTracker.last_submissions(submissions_ready);
 	});
 	
 	function submissions_ready()
 	{
-		top_solvers(14);
-		append_submissions(20);
+		UvaTracker.top_solvers(14);
+		UvaTracker.append_submissions(20);
 	}
 	
 	$('#option1').click(function()
 	{
-		top_solvers(14);
+		UvaTracker.top_solvers(14);
 	});
 	
 	$('#option2').click(function()
 	{
-		top_solvers(14, true);
+		UvaTracker.top_solvers(14, true);
 	});
 </script>

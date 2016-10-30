@@ -13,5 +13,8 @@ module BeoiTraining
 		# -- all .rb files in that directory are automatically loaded.
 		
 		config.time_zone = "Brussels"
+		
+		# Filter from logs
+		config.filter_parameters += [:password, :password_confirmation]
 	end
 end

@@ -1,0 +1,120 @@
+<% users = User.where(is_contestant: true).all.each do |u| %>
+	<% u.initials = u.display_name.split.map{|s| s[0]}.map(&:capitalize).join("") unless u.initials && u.initials != "" %>
+<% end %>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Problems</strong>
+			<% if @current_user && @current_user.admin? %>
+				<a href="/problemsets/edit">(Edit)</a>
+			<% end %>
+		</span>
+	</div>
+	<div class="panel-body">
+		<% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
+			<table class="table">
+				<thead>
+					<tr>
+						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
+						<th>Difficulty</th>
+						<% users.each do |u| %>
+							<th title="<%= u.display_name %>"><%= u.initials %></th>
+						<% end %>
+					</tr>
+				</thead>
+				<tbody>
+					<% ps.problems.sort_by{|pb| pb.difficulty}.each do |pb| %>
+						<% case pb.website 
+						   when 0 %> <!-- UVa -->
+							<tr class="uva-problem">
+								<td><a href="https://uva.onlinejudge.org/">UVa Onlinejudge</a></td>
+								<td class="problem-format" data-pnum="<%= pb.handle %>">Unknown Problem</td>
+								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
+								<% users.each do |u| %>
+									<td class="user-submission" data-user="<%= u.id %>">-</td>
+								<% end %>
+							</tr>
+						<% when 1 %> <!-- Codeforces -->
+							<tr class="codeforces-problem">
+								<td><a href="http://codeforces.com/">Codeforces</a></td>
+								<td class="problem-format" data-phandle="<%= pb.handle %>">Unknown Problem</td>
+								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
+								<% users.each do |u| %>
+									<td class="user-submission" data-user="<%= u.id %>">-</td>
+								<% end %>
+							</tr>
+						<% end %>
+					<% end %>
+				</tbody>
+			</table>
+		<% end %>
+	</div>
+</div>
+
+<%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
+<%= javascript_tag "var cf_users = #{Hash[User.all.map{|u| [u.id, u.codeforces]}].to_json};" %>
+<script type="text/javascript">
+$(function()
+{
+	UvaTracker.last_submissions(function()
+	{
+		UvaTracker.initialize_specific_tracker();
+		show_uva();
+	});
+	
+	CodeforcesTracker.initialize_specific_tracker(show_codeforces);
+	CodeforcesTracker.initialize_problem_info(show_codeforces_problems);
+});
+
+// 1. UVa
+function show_uva()
+{
+	$('.uva-problem').each(function()
+	{
+		var $el = $(this);
+		var $problem = $el.children('.problem-format:first');
+		var pid = UvaTracker.get_problem_info_id($problem.attr("data-pnum"));
+		if(!pid)
+			return;
+		else
+			pid = pid[0];
+		$problem.html(UvaUtil.get_problem_format(pid));
+		$el.children('.user-submission').each(function()
+		{
+			var res = UvaTracker.get_problem_status($(this).attr("data-user"), pid);
+			if(res == 1)
+				$(this).html('<span class="glyphicon glyphicon-ok green"></span>');
+			else if(res == 0)
+				$(this).html('<span class="glyphicon glyphicon-remove red"></span>')
+		});
+	});
+}
+
+// 2. Codeforces
+function show_codeforces()
+{
+	$('.codeforces-problem').each(function()
+	{
+		var $el = $(this);
+		var $problem = $el.children('.problem-format:first');
+		var handle = $problem.attr("data-phandle");
+		$el.children('.user-submission').each(function()
+		{
+			var res = CodeforcesTracker.get_problem_status($(this).attr("data-user"), handle);
+			if(res == 1)
+				$(this).html('<span class="glyphicon glyphicon-ok green"></span>');
+			else if(res == 0)
+				$(this).html('<span class="glyphicon glyphicon-remove red"></span>')
+		});
+	});
+}
+function show_codeforces_problems()
+{
+	$('.codeforces-problem .problem-format').each(function()
+	{
+		var $el = $(this);
+		var format = CodeforcesTracker.get_problem_format($el.attr("data-phandle"));
+		if(format)
+			$el.html(format);
+	});
+}
+</script>

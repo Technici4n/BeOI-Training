@@ -1,0 +1,71 @@
+<% require "application_helper" %>
+<% require "problemsets_helper" %>
+
+<%	def category_name(id)
+		case id
+		when 0
+			return "UVa Onlinejudge"
+		when 1
+			return "Codeforces"
+		end
+	end %>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Problems (edit mode)</strong></span>
+	</div>
+	<div class="panel-body">
+		<div>
+			<ol class="breadcrumb" style="background-color: white; margin: 0">
+				<li><span class="icon-home"></span> <a href="/problemsets/edit/">Home</a></li>
+				<li class="active"><%= @problemset.title %></li>
+			</ol>
+		</div>
+		<hr style="margin: 3px 0 3px;">
+		<div>
+			<h3><%= @problemset.title %></h3>
+			Created the <%= ApplicationHelper.datetime_to_s(@problemset.created_at) %>.
+		</div>
+		<table class="table" style="margin-top: 10px;">
+			<thead>
+				<tr>
+					<th>Website</th>
+					<th>Handle, ID, ...</th>
+					<th>Difficulty</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @problemset.problems.sort_by{|pb| pb.difficulty }.each do |pb| %>
+					<tr>
+						<td><%= category_name pb.website %></td>
+						<td><%= pb.handle %></td>
+						<td><%= ProblemsetsHelper.difficulty_to_s pb.difficulty %></td>
+						<td><%= link_to "Remove", "/problemsets/remove/#{pb.id}", method: :delete %></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+		
+		<h4><strong>New problem</strong></h4>
+		<%= form_for :problem, url: "/problemsets/#{@problemset.id}/edit" do |f| %>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Website" %><br>
+				<%= f.select :website, [["UVa Onlinejudge", 0], ["Codeforces", 1]], {}, {:class => "form-control", :style => "width: 300px;"} %>
+			</div>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Problem (ID for UVa Onlinejudge, Handle (ex: 375E) for Codeforces)" %><br>
+				<%= f.text_field :handle, placeholder: "Problem", class: "form-control", style: "width: 300px;" %>
+			</div>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Difficulty" %><br>
+				<%= f.select :difficulty, [["Trivial", 0], ["Very easy", 1], ["Easy", 2], ["Medium easy", 3], ["Medium", 4], ["Medium advanced", 5], ["Advanced", 6], ["Advanced hard", 7], ["Hard", 8], ["Very hard", 9]],
+											{}, {:class => "form-control", :style => "width: 300px;"} %>
+			</div>
+			
+			<%= f.submit :style => "margin-bottom: 10px;", :class => "btn btn-primary" %>
+		<% end %>
+	</div>
+</div>

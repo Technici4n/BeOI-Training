@@ -13,10 +13,16 @@ class User < ApplicationRecord
 	
 	EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
 	UVA_USERNAME_REGEX = /\A[A-Z0-9_]{3,}\z/i
+	CODEFORCES_USERNAME_REGEX = /\A[A-Z0-9_]{3,24}\z/i
 	
 	validates :username, :presence => true, :uniqueness => true, :length => { :in => 3..40 }
-	validates :uva, :presence => true, :uniqueness => true, :format => UVA_USERNAME_REGEX
+	validates :uva, :uniqueness => true, :format => UVA_USERNAME_REGEX, :allow_blank => true
+	validates :codeforces, :uniqueness => true, :format => CODEFORCES_USERNAME_REGEX, :allow_blank => true
 	validates :email, :presence => true, :uniqueness => true, :format => EMAIL_REGEX
+	validates :display_name, :length => { :in => 3..40 }, :uniqueness => true
+	validates :initials, :length => { :in => 2..6 }, :uniqueness => true, :allow_blank => true
+	validates :password, :length => { :minimum => 6}, :confirmation => true, :on => :create
+	validates :password_confirmation, presence: true, :on => :create
 	
 	def encrypt_password
 		if password.present?

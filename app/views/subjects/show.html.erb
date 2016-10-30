@@ -20,7 +20,7 @@
 				<% end %>
 				<%= @subject.title %>
 			</h3>
-			Started by <%= UsersHelper.display_name(@subject.forum_messages.first.user) %>, <span style="color: #888888">the <%= ApplicationHelper.datetime_to_s(@subject.forum_messages.first.created_at) %></span>
+			Started by <%= UsersHelper.display_name(@subject.forum_messages.first.user) %>, <span style="color: #888888">the <%= ApplicationHelper.datetime_to_s(@subject.forum_messages.first.created_at) %></span>.
 			<% if @current_user && @current_user.admin %>
 				<%= link_to "(Toggle pinned)", "/subjects/#{@subject.id}/toggle_pinned", method: :patch %>
 			<% end %>

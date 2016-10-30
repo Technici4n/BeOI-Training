@@ -1,0 +1,38 @@
+<% require "application_helper" %>
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Problems (edit mode)</strong></span>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Problemset</th>
+					<th>Problems</th>
+					<th>Created</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @problemsets.sort_by{|ps| ps.created_at.to_i}.each do |ps| %>
+					<tr>
+						<td><%= ps.title %></td>
+						<td><%= ps.problems.count %></td>
+						<td>The <%= ApplicationHelper.datetime_to_s(ps.created_at) %></td>
+						<td><a href="/problemsets/<%= ps.id %>/edit">Edit</a></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+		<%= form_for :problemset, url: "/problemsets/edit" do |f|%>
+			
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "New Problemset" %>
+				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
+			</div>
+			
+			<%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary" %>
+			
+		<% end %>
+	</div>
+</div>

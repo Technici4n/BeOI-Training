@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161023180004) do
+ActiveRecord::Schema.define(version: 20161030083027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,22 @@ ActiveRecord::Schema.define(version: 20161023180004) do
     t.datetime "updated_at",    null: false
   end
 
+  create_table "problems", force: :cascade do |t|
+    t.string   "handle"
+    t.integer  "problemset_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "website"
+    t.integer  "difficulty"
+  end
+
+  create_table "problemsets", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "subjects", force: :cascade do |t|
     t.string   "title"
     t.integer  "category"
@@ -67,6 +83,8 @@ ActiveRecord::Schema.define(version: 20161023180004) do
     t.boolean  "in_event"
     t.datetime "last_forum_visit"
     t.integer  "unread_subjects"
+    t.string   "codeforces"
+    t.string   "initials"
   end
 
 end

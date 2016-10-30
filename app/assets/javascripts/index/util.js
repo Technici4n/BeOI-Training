@@ -1,3 +1,9 @@
+//IE Support
+if(!Date.now)
+{
+	Date.now = function() {return new Date().getTime();}
+}
+
 String.prototype.format = String.prototype.f = function()
 {
 	var s = this, i = arguments.length;
@@ -65,22 +71,3 @@ function timestamp_to_countdown(timestamp)
 	}
 	return ans;
 }
-
-/*
-function binary_search(array, el)
-{
-	var lo = 0, hi = array.length - 1;
-	while(lo <= hi)
-	{
-		// a | b = Math.floor(a)
-		// Fuck this implicit cast...
-		var mid = (lo + hi) / 2 | 0;
-		if(array[mid] == el)
-			return mid;
-		else if(array[mid] < el)
-			lo = mid + 1;
-		else
-			hi = mid - 1;
-	}
-	return -1;
-}*/

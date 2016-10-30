@@ -18,14 +18,22 @@ Rails.application.routes.draw do
 	patch "/subjects/edit/:message_id", to: "subjects#update"
 	patch "/subjects/:subject_id/toggle_pinned", to: "subjects#toggle_pinned"
 	
+	# Problemsets
+	get "/problemsets", to: "problemsets#index"
+	get "/problemsets/edit", to: "problemsets#edit"
+	post "/problemsets/edit", to: "problemsets#create"
+	get "/problemsets/:problemset_id/edit", to: "problemsets#edit_specific"
+	post "/problemsets/:problemset_id/edit", to: "problemsets#create_problem"
+	delete "/problemsets/remove/:problem_id", to: "problemsets#remove_problem"
+	
 	# Admin tools
 	get "/admin", to: "admin#index"
 	patch "/admin/update_event", to: "admin#update_event"
 	delete "/admin/clear_event", to: "admin#clear_event"
 
 	# Misc.
-	get "/tracker", to: "index#tracker"
 	get "/test", to: "index#test" if Rails.env.development?
+	get "/codeforces", to: "index#codeforces_request"
 	
 	root "index#index"
 	

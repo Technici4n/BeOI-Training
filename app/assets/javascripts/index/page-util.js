@@ -2,6 +2,25 @@
 	Some JS elements used in HTML (mostly in the forum)
 */
 
+// "Fetch From UVa" (User's display_name)
+function fetch_uva_id()
+{
+	if($('#user_uva').val() != "")
+	{
+		$.getJSON("http://uhunt.felix-halim.net/api/uname2uid/{0}".f($('#user_uva').val()), function (data)
+		{
+			if(data != 0)
+			{
+				$.getJSON("http://uhunt.felix-halim.net/api/subs-user-last/{0}/0".f(data), function (data2)
+				{
+					$('#user_display_name').val(data2["name"]);
+				});
+			}
+		});
+	}
+}
+
+// Spoiler code
 function spoiler_click(id)
 {
 	var element = document.getElementById("spoiler_num" + id)
@@ -31,6 +50,7 @@ function spoiler_click(id)
 	}
 }
 
+// Insert text at cursor pos in an <input>
 function cursor_insert(before_text, after_text, elem_id)
 {
 	var element = document.getElementById(elem_id);
