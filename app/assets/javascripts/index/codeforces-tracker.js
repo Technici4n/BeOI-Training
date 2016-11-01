@@ -50,7 +50,8 @@ var CodeforcesTracker = (function()
 		initialize_specific_tracker: function(callback)
 		{
 			// 0. Initialize al variables
-			problems_by_user = {};
+			problems_by_user = JSON.parse(localStorage["codeforces_submissions"] || "{}");
+			callback();
 			
 			// 1. Get all submissions
 			var submissions_requests = [];
@@ -63,12 +64,14 @@ var CodeforcesTracker = (function()
 			$.when.apply($, submissions_requests).done(function()
 			{
 				callback();
+				localStorage["codeforces_submissions"] = JSON.stringify(problems_by_user);
 			});
 		},
 		// Prepare for problem info queries (very long so it's separated)
 		initialize_problem_info: function(callback)
 		{
-			problems = {};
+			problems = JSON.parse(localStorage["codeforces_problems"] || "{}");
+			callback();
 			$.getJSON(codeforces_all_problems_url, function(data)
 			{
 				if(data["status"] === "OK")
@@ -81,6 +84,7 @@ var CodeforcesTracker = (function()
 						problems[handle] = [pb["name"], pb["contestId"], pb["index"]];
 					}
 					callback();
+					localStorage["codeforces_problems"] = JSON.stringify(problems);
 				}
 			});
 		},
