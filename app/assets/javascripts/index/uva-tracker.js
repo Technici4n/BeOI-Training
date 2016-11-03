@@ -281,7 +281,7 @@ var UvaUtil = (function()
 			{
 				return "<span class=\"red\">Can't be judged</span>";
 			}
-			else if(id == 20)
+			else if(id == 20 || id == 0)
 			{
 				return "In judge queue";
 			}
@@ -317,9 +317,13 @@ var UvaUtil = (function()
 			{
 				return "<span class=\"orange\">Presentation error</span>";
 			}
-			else
+			else if(id == 90)
 			{
 				return "<span class=\"green\">Accepted</span>";
+			}
+			else
+			{
+				return "Unknown verdict. Please report !";
 			}
 		},
 
@@ -334,13 +338,13 @@ var UvaUtil = (function()
 			{
 				return ' class="danger"';
 			}
-			else if(id == 20 || id == 45)
+			else if(id == 90)
 			{
-				return '';
+				return ' class="success"';
 			}
 			else
 			{
-				return ' class="success"';
+				return '';
 			}
 		},
 
