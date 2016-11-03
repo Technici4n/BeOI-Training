@@ -21,7 +21,7 @@ class SubjectsController < ApplicationController
 		
 		# Pagination
 		params[:page] ||= 1
-		params[:page] = (@subject.forum_messages.count / ForumMessage.per_page).ceil + 1 if params[:page] == 'last'
+		params[:page] = (@subject.forum_messages.count + ForumMessage.per_page - 1 / ForumMessage.per_page).floor + 1 if params[:page] == 'last'
 		@messages = @subject.forum_messages.order(:created_at).paginate(:page => params[:page])
 	end
 	
