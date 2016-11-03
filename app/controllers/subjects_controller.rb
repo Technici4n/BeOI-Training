@@ -56,7 +56,7 @@ class SubjectsController < ApplicationController
 			@subject.update(forum_messages: @subject.forum_messages)
 			
 			update_unread_subjects
-			redirect_to "/subjects/#{@subject.id}?page=last"
+			redirect_to "/subjects/#{@subject.id}"
 		end
 	end
 	
@@ -100,11 +100,10 @@ class SubjectsController < ApplicationController
 			# Send mail to followers
 			@subject.following_users.each do |u|
 				if u != @current_user
-					#SubjectsMailer.notify_subject_follower(u, @subject, @current_user).deliver_later
 					Pony.mail(:to => u.email, :subject => "BeOI-Training: New message in followed subject \"#{@subject.title}\"", :html_body => "Hello #{u.display_name},<br><br>#{@current_user.display_name} posted a new message in a subject that you follow, #{view_context.link_to @subject.title, "#{ENV['APP_URL']}/subjects/#{@subject.id}"}. You can read that message #{view_context.link_to "here", "#{ENV['APP_URL']}/subjects/#{@subject.id}"}.<br><br>If you don't want to follow this subject anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/#{@subject.id}", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
 				end
 			end
-			redirect_to "/subjects/#{@subject.id}"
+			redirect_to "/subjects/#{@subject.id}?page=last"
 		else
 			@message.errors.full_messages.each do |m|
 				show_error(m)
