@@ -23,7 +23,7 @@
 							return 0
 						end
 					end %>
-				<% Subject.all.sort_by{|s| -2000000000*to_i(s.pinned?)+2000000000-s.forum_messages.last.created_at.to_i}.each do |s| %>
+				<% @subjects.each do |s| %>
 					<% fm = s.forum_messages %><!-- To avoid those 100ths of SQL requests -->
 					<% last_msg = fm.last %>
 					<% first_msg = fm.first %>
@@ -31,16 +31,14 @@
 						<td>
 							<% if @current_user && @current_user.last_forum_visit < last_msg.created_at %>
 								<center><span class="new-message" title="New!"></span></center>
+								<% preformat = "<strong>" %>
+								<% postformat = "</strong>" %>
+							<% else %>
+								<% preformat = "" %>
+								<% postformat = "" %>
 							<% end %>
 						</td>
 						<td>
-							<% 	if @current_user && @current_user.last_forum_visit < last_msg.created_at
-									preformat = "<strong>"
-									postformat = "</strong>"
-								else
-									preformat = ""
-									postformat = ""
-								end %>
 							<h5>
 								<%= preformat.html_safe %>
 								<!-- Pinned? -->
@@ -58,13 +56,17 @@
 						<td></td>
 						<td><span>By <%= UsersHelper.display_name(first_msg.user) %>, the <%= ApplicationHelper.datetime_to_s(first_msg.created_at) %></span></td>
 						<td><span><%= pluralize(s.views, "view" )%></span></td>
-						<td><span>The <%= ApplicationHelper.datetime_to_s(last_msg.created_at) %></span></td>
+						<td><a href="/subjects/<%= s.id %>?page=last">The <%= ApplicationHelper.datetime_to_s(last_msg.created_at) %></a></td>
 					</tr>
 				<% end %>
 			</tbody>
 		</table>
+		
 		<% if session[:user_id] %>
-			<center><%= link_to "New Subject", "/subjects/new", class: "btn btn-lg btn-primary btn-gray", style: "margin: 10px 0 0 0;" %></center>
+			<center><%= link_to "New Subject", "/subjects/new", class: "btn btn-lg btn-primary btn-gray", style: "margin: 20px 0 0 0;" %></center>
 		<% end %>
+		
+		<!-- Pagination -->
+		<center><%= will_paginate @subjects %></center>
 	</div>
 </div>

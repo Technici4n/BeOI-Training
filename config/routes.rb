@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 	get "/subjects/edit/:message_id", to: "subjects#edit"
 	patch "/subjects/edit/:message_id", to: "subjects#update"
 	patch "/subjects/:subject_id/toggle_pinned", to: "subjects#toggle_pinned"
+	put "/subjects/:subject_id/start_following", to: "subjects#start_following_subject"
+	delete "/subjects/:subject_id/stop_following", to: "subjects#stop_following_subject"
 	
 	# Problemsets
 	get "/problemsets", to: "problemsets#index"

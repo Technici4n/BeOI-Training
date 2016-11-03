@@ -13,7 +13,17 @@
 			</ol>
 		</div>
 		<hr style="margin: 3px 0 3px;">
-		<div>
+		<div style="override: hidden;">
+			<!-- Following (only if user logged in) -->
+			<div style="float: right;">
+				<% if @current_user %>
+					<% if @subject.following_users.exists?(@current_user.id) %>
+						<%= link_to "Stop following this subject", "/subjects/#{@subject.id}/stop_following", method: :delete, class: "btn btn-default btn-gray" %>
+					<% else %>
+						<%= link_to "Follow this subject", "/subjects/#{@subject.id}/start_following", method: :put, data: {confirm: "You will receive a mail for every message posted in this subject."}, class: "btn btn-default btn-gray" %>
+					<% end %>
+				<% end %>
+			</div>
 			<h3>
 				<% if @subject.pinned? %>
 					<%= "<span title=\"Pinned\" class = \"icon-pinned-big\"></span>".html_safe %>
@@ -25,8 +35,9 @@
 				<%= link_to "(Toggle pinned)", "/subjects/#{@subject.id}/toggle_pinned", method: :patch %>
 			<% end %>
 		</div>
+		
 		<!-- All messages -->
-		<% @subject.forum_messages.sort_by{|m| m.created_at}.each do |m| %>
+		<% @messages.each do |m| %>
 			<div class="message-display">
 				<div class="header">
 					<span class="time"><%= ApplicationHelper.datetime_to_s(m.created_at) %></span>
@@ -46,6 +57,7 @@
 				</div>
 			</div>
 		<% end %>
+		
 		<!-- New message -->
 		<% if session[:user_id] %>
 			<div class="message-display" id="dynamical-preview" style="visibility: hidden; position: absolute;">
@@ -63,14 +75,17 @@
 			</div>
 			<%= form_for :forum_message, url: "/subjects/#{@subject.id}" do |f| %>
 			
-			<div class="form-group">
-				<%= ApplicationHelper.f_label "New Message" %>
-				<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
-			</div>
-			
-			<center><%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary", :id => "forum_message_submit" %></center>
+				<div class="form-group">
+					<%= ApplicationHelper.f_label "New Message" %>
+					<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
+				</div>
+				
+				<center><%= f.submit :class => "btn btn-primary", :id => "forum_message_submit" %></center>
+			<% end %>
 		<% end %>
-		<% end %>
+		
+		<!-- Pagination -->
+		<center><%= will_paginate @messages %></center>
 	</div>
 </div>
 

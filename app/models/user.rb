@@ -2,8 +2,10 @@ require "digest/sha1"
 
 class User < ApplicationRecord
 
-	has_many :subjects
+	has_many :subjects # ??
 	has_many :forum_messages
+	has_many :following_subjects, dependent: :destroy
+	has_many :followed_subjects, through: :following_subjects, source: :subject
 
 	before_save :encrypt_password
 	after_save :clear_password

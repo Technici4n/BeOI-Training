@@ -1,5 +1,5 @@
 class SubjectsController < ApplicationController
-	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned]
+	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned, :start_following_subject, :stop_following_subject]
 	before_action only: [:index, :show] do
 		authenticate_user(false)
 	end
@@ -9,12 +9,20 @@ class SubjectsController < ApplicationController
 	after_action :clear_unread_subjects_count, :only => [:index]
 	
 	def index
+		# Pagination
+		params[:page] ||= 1
+		@subjects = Subject.order(pinned: :desc, created_at: :desc).paginate(:page => params[:page])
 	end
 	
-	def show
+	def show 
 		@subject = Subject.find(params[:subject_id])
 		@subject.update(views: @subject.views + 1)
 		@message = ForumMessage.new
+		
+		# Pagination
+		params[:page] ||= 1
+		params[:page] = (@subject.forum_messages.count / ForumMessage.per_page).ceil + 1 if params[:page] == 'last'
+		@messages = @subject.forum_messages.order(:created_at).paginate(:page => params[:page])
 	end
 	
 	def new
@@ -48,7 +56,7 @@ class SubjectsController < ApplicationController
 			@subject.update(forum_messages: @subject.forum_messages)
 			
 			update_unread_subjects
-			redirect_to "/subjects/#{@subject.id}"
+			redirect_to "/subjects/#{@subject.id}?page=last"
 		end
 	end
 	
@@ -62,7 +70,7 @@ class SubjectsController < ApplicationController
 		@subject = @message.subject
 		
 		if @message.update(message_params)
-			redirect_to "/subjects/#{@subject.id}"
+			redirect_to "/subjects/#{@subject.id}?page=last"
 		else
 			@message.errors.full_messages.each do |m|
 				show_error(m)
@@ -89,6 +97,13 @@ class SubjectsController < ApplicationController
 			@subject.update(forum_messages: (@subject.forum_messages << @message))
 			
 			update_unread_subjects
+			# Send mail to followers
+			@subject.following_users.each do |u|
+				if u != @current_user
+					#SubjectsMailer.notify_subject_follower(u, @subject, @current_user).deliver_later
+					Pony.mail(:to => u.email, :subject => "BeOI-Training: New message in followed subject \"#{@subject.title}\"", :html_body => "Hello #{u.display_name},<br><br>#{@current_user.display_name} posted a new message in a subject that you follow, #{view_context.link_to @subject.title, "#{ENV['APP_URL']}/subjects/#{@subject.id}"}. You can read that message #{view_context.link_to "here", "#{ENV['APP_URL']}/subjects/#{@subject.id}"}.<br><br>If you don't want to follow this subject anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/#{@subject.id}", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
+				end
+			end
 			redirect_to "/subjects/#{@subject.id}"
 		else
 			@message.errors.full_messages.each do |m|
@@ -96,6 +111,24 @@ class SubjectsController < ApplicationController
 			end
 			render "show", subject_id: params[:subject_id]
 		end
+	end
+	
+	def start_following_subject
+		@subject = Subject.find(params[:subject_id])
+		if !@subject.following_users.exists?(@current_user.id)
+			@subject.following_users << @current_user
+		else
+			show_error("You are already following this subject.")
+		end
+		redirect_to "/subjects/#{@subject.id}"
+	end
+	
+	def stop_following_subject
+		@subject = Subject.find(params[:subject_id])
+		if @subject.following_users.exists?(@current_user.id)
+			@subject.following_users.delete(@current_user)
+		end
+		redirect_to "/subjects/#{@subject.id}"
 	end
 	
 	private
