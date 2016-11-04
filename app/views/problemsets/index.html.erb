@@ -11,17 +11,17 @@
 		</span>
 	</div>
 	<div class="panel-body">
-        <table class="table">
-            <% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each_with_index do |ps, idx| %>
-                <thead>
-                    <tr>
-                        <th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
-                        <th><% if idx == 0 %>Difficulty<% end %></th>
-                        <% users.each do |u| %>
-                            <th title="<%= u.display_name %>"><% if idx == 0 %><%= u.initials %><% end %></th>
-                        <% end %>
-                    </tr>
-                </thead>
+		<table class="table">
+			<% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
+				<thead>
+					<tr>
+						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
+						<th>Difficulty</th>
+						<% users.each do |u| %>
+							<th title="<%= u.display_name %>"><%= u.initials %></th>
+						<% end %>
+					</tr>
+				</thead>
 				<tbody>
 					<% ps.problems.sort_by{|pb| pb.difficulty}.each do |pb| %>
 						<% case pb.website 
@@ -46,8 +46,8 @@
 						<% end %>
 					<% end %>
 				</tbody>
-            <% end %>
-        </table>
+			<% end %>
+		</table>
 	</div>
 </div>
 
