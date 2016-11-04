@@ -1,7 +1,15 @@
 var CodeforcesTracker = (function()
 {
-	var codeforces_user_submissions_url = "/codeforces?method=user.status?handle={0}";
-	var codeforces_all_problems_url = "/codeforces?method=problemset.problems";
+	if(window.location.protocol == "https:")
+	{
+		var codeforces_user_submissions_url = "/codeforces?method=user.status?handle={0}";
+		var codeforces_all_problems_url = "/codeforces?method=problemset.problems";
+	}
+    else
+	{
+		var codeforces_user_submissions_url = "http://codeforces.com/api/user.status?handle={0}&jsonp=?";
+		var codeforces_all_problems_url = "http://codeforces.com/api/problemset.problems?jsonp=?";
+	}
 	var codeforces_problem_url = "http://codeforces.com/problemset/problem/{0}/{1}";
 	
 	// CF_Users: {..., id: Codeforces handle, ...}
