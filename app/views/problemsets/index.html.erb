@@ -28,7 +28,7 @@
 						   when 0 %> <!-- UVa -->
 							<tr class="uva-problem">
 								<td><a target="_blank" href="https://uva.onlinejudge.org/">UVa Onlinejudge</a></td>
-								<td class="problem-format" data-pnum="<%= pb.handle %>">Unknown Problem</td>
+								<td class="problem-format" data-pnum="<%= pb.handle %>"><%= pb.handle %> - Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
 									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
@@ -37,7 +37,7 @@
 						<% when 1 %> <!-- Codeforces -->
 							<tr class="codeforces-problem">
 								<td><a target="_blank" href="http://codeforces.com/">Codeforces</a></td>
-								<td class="problem-format" data-phandle="<%= pb.handle %>">Unknown Problem</td>
+								<td class="problem-format" data-phandle="<%= pb.handle %>"><%= pb.handle %> - Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
 								<% users.each do |u| %>
 									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
@@ -52,7 +52,7 @@
 </div>
 
 <%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
-<%= javascript_tag "var cf_users = #{Hash[User.all.map{|u| [u.id, u.codeforces]}].to_json};" %>
+<%= javascript_tag "var cf_users = #{Hash[users.map{|u| [u.id, u.codeforces]}].to_json};" %>
 <script type="text/javascript">
 $(function()
 {
