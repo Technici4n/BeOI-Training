@@ -11,8 +11,8 @@
 		</span>
 	</div>
 	<div class="panel-body">
-		<% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
-			<table class="table">
+		<table class="table">
+			<% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
 				<thead>
 					<tr>
 						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
@@ -46,8 +46,8 @@
 						<% end %>
 					<% end %>
 				</tbody>
-			</table>
-		<% end %>
+			<% end %>
+		</table>
 	</div>
 </div>
 
