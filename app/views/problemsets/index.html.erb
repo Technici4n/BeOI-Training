@@ -12,7 +12,7 @@
 	</div>
 	<div class="panel-body">
 		<table class="table">
-			<% Problemset.all.sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
+			<% Problemset.where(visible: true).sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
 				<thead>
 					<tr>
 						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>

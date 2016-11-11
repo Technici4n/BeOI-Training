@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 	get "/problemsets/:problemset_id/edit", to: "problemsets#edit_specific"
 	post "/problemsets/:problemset_id/edit", to: "problemsets#create_problem"
 	delete "/problemsets/remove/:problem_id", to: "problemsets#remove_problem"
+	patch "/problemsets/:problemset_id/update", to: "problemsets#update"
 	
 	# Admin tools
 	get "/admin", to: "admin#index"

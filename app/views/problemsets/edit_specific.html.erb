@@ -22,7 +22,18 @@
 		</div>
 		<hr style="margin: 3px 0 3px;">
 		<div>
-			<h3><%= @problemset.title %></h3>
+			<%= form_for :problemset, url: "/problemsets/#{params[:problemset_id]}/update", method: :patch do |f| %>
+				<div class="form-group">
+					<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
+				</div>
+				
+				<div class="checkbox">
+					<%= f.check_box :visible %>
+					Visible
+				</div>
+				
+				<%= f.submit :style => "margin-bottom: 20px;", :class => "btn btn-primary" %>
+			<% end %>
 			Created the <%= ApplicationHelper.datetime_to_s(@problemset.created_at) %>.
 		</div>
 		<table class="table" style="margin-top: 10px;">

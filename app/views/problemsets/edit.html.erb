@@ -9,6 +9,7 @@
 				<tr>
 					<th>Problemset</th>
 					<th>Problems</th>
+					<th>Visible</th>
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
@@ -18,6 +19,7 @@
 					<tr>
 						<td><%= ps.title %></td>
 						<td><%= ps.problems.count %></td>
+						<td><%= if ps.visible then "Yes" else "No" end %></td>
 						<td>The <%= ApplicationHelper.datetime_to_s(ps.created_at) %></td>
 						<td><a href="/problemsets/<%= ps.id %>/edit">Edit</a></td>
 					</tr>
@@ -29,6 +31,11 @@
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "New Problemset" %>
 				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
+			</div>
+			
+			<div class="checkbox">
+				<%= f.check_box :visible, {:checked => true} %>
+				Visible
 			</div>
 			
 			<%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary" %>

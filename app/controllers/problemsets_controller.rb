@@ -2,7 +2,7 @@ class ProblemsetsController < ApplicationController
 	before_action do
 		authenticate_user(false)
 	end
-	before_action :admin_check, :only => [:edit, :create, :edit_specific, :create_problem, :remove_problem]
+	before_action :admin_check, :only => [:edit, :create, :update, :edit_specific, :create_problem, :remove_problem]
 	
 	def index
 	end
@@ -13,7 +13,7 @@ class ProblemsetsController < ApplicationController
 	end
 	
 	def create
-		@problemset = Problemset.new(new_problemset_params)
+		@problemset = Problemset.new(problemset_params)
 		
 		if @problemset.save
 			redirect_to "/problemsets/edit"
@@ -23,6 +23,12 @@ class ProblemsetsController < ApplicationController
 			end
 			render "edit"
 		end
+	end
+	
+	def update
+		@problemset = Problemset.find(params[:problemset_id])
+		@problemset.update(problemset_params)
+		redirect_to "/problemsets/#{params[:problemset_id]}/edit"
 	end
 	
 	def edit_specific
@@ -50,8 +56,8 @@ class ProblemsetsController < ApplicationController
 	end
 	
 	private
-		def new_problemset_params
-			return params.require(:problemset).permit(:title)
+		def problemset_params
+			return params.require(:problemset).permit(:title, :visible)
 		end
 		
 		def new_problem_params
