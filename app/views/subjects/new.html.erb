@@ -62,8 +62,12 @@ function update_preview()
 	{
 		$('#subject-dynamical-preview').css('position', 'relative');
 		$('#subject-dynamical-preview').css('visibility', 'visible');
-		$('#subject-dynamical-preview .message').attr("data-swapped", $('#text').val());
-		$('#subject-dynamical-preview .message').html(BBCodeParser.parse($('#text').val()));
+		// Escape things (uses the Rails RegExp for consistency)
+		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
+		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
+		var text = $('#text').val().replace(/[&"><']/g, function(c){return HTML_ESCAPE[c];});
+		$('#subject-dynamical-preview .message').attr("data-swapped", text);
+		$('#subject-dynamical-preview .message').html(BBCodeParser.parse(text));
 		$('#subject_submit').prop("disabled", BBCodeParser.errors);
 		PR.prettyPrint();
 		$('#subject-dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
