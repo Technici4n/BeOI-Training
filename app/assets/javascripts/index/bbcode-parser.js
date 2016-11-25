@@ -159,7 +159,7 @@ BBCodeParser.add_tag("u", function(){return ['<span class="bb-{0}">'.f("u"), '</
 BBCodeParser.add_tag("s", function(){return ['<span class="bb-{0}">'.f("s"), '</span>']});
 BBCodeParser.add_tag("color", function(arg){return ['<span style="color: {0};">'.f(arg),'</span>']});
 BBCodeParser.add_tag("url", function(arg){if(arg == undefined){return ['<a class="bbcode-incomplete-url" target="_blank">', '</a>']} else {return ['<a target="_blank" href="{0}">'.f(arg), '</a>']}}, true, true);
-BBCodeParser.add_tag("code", function(arg){if(arg == "inline"){return ['<code>', '</code>']}else{return ['<pre class="prettyprint lang-{0}">'.f(arg), '</pre>']}}, true, true);
+BBCodeParser.add_tag("code", function(arg){if(arg && arg == "inline"){return ['<code>', '</code>']}else{return ['<pre class="prettyprint lang-{0}">'.f(arg), '</pre>']}}, true, true);
 BBCodeParser.add_tag("spoiler", function(){return ['<button id="spoiler_button_num{0}" class="btn btn-default spoiler-btn" onclick="spoiler_click({0});">Show spoiler</button><br><div class="spoiler" id="spoiler_num{0}" data-down="false" style="visibility:hidden; position:absolute;">'.f(spoiler_id++), '</div>']});
 BBCodeParser.add_tag("uva", function(arg){return [UvaTracker.get_problem_format(arg)]}, false);
 
