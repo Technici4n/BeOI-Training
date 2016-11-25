@@ -1,5 +1,5 @@
 /*
- * Code for the home page tracker and also for the advanced tracker
+ * Code for the home page tracker and also for the advanced tracker + forum("uva problem" BBCode tag)
  */
 
 /* Main code */
@@ -234,6 +234,51 @@ var UvaTracker = (function()
 				}
 			}
 		},
+		// Load all the problems from localStorage, and then update for the next page load
+		load_all_problems: function(callback)
+		{
+			if(localStorage["uva_problems"])
+			{
+				$.getJSON(uhunt_all_problems_url, function(data)
+				{
+					var tmp = {};
+					for(var i = 0; i < data.length; ++i)
+					{
+						tmp[data[i][1]] = [data[i][0], data[i][2]];
+					}
+					localStorage["uva_problems"] = JSON.stringify(tmp);
+				});
+				if(callback)
+					callback();
+			}
+			else
+			{
+				$.getJSON(uhunt_all_problems_url, function(data)
+				{
+					var tmp = {};
+					for(var i = 0; i < data.length; ++i)
+					{
+						tmp[data[i][1]] = [data[i][0], data[i][2]];
+					}
+					localStorage["uva_problems"] = JSON.stringify(tmp);
+					if(callback)
+						callback();
+				});
+			}
+		},
+		// Return problem link, given its problem number
+		get_problem_format: function(pnum)
+		{
+			if(localStorage["uva_problems"])
+			{
+				var info = JSON.parse(localStorage["uva_problems"])[pnum];
+				return '<a target="_blank" href="{0}">{1} - {2}</a>'.f(UvaTracker.get_uva_problem_url().f(info[0]), pnum, info[1]);
+			}
+			else
+			{
+				return "[Problems aren't loaded yet...]";
+			}
+		},
 		// 1: Accepted, 0: Tried, -1: Not tried
 		get_problem_status: function(user, pid)
 		{
@@ -386,3 +431,6 @@ var UvaUtil = (function()
 	};
 	return ret;
 })();
+
+// Automatically initialize the problems, and store them so they are available for later
+UvaTracker.load_all_problems();

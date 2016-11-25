@@ -161,6 +161,7 @@ BBCodeParser.add_tag("color", function(arg){return ['<span style="color: {0};">'
 BBCodeParser.add_tag("url", function(arg){if(arg == undefined){return ['<a class="bbcode-incomplete-url" target="_blank">', '</a>']} else {return ['<a target="_blank" href="{0}">'.f(arg), '</a>']}}, true, true);
 BBCodeParser.add_tag("code", function(arg){if(arg == "inline"){return ['<code>', '</code>']}else{return ['<pre class="prettyprint lang-{0}">'.f(arg), '</pre>']}}, true, true);
 BBCodeParser.add_tag("spoiler", function(){return ['<button id="spoiler_button_num{0}" class="btn btn-default spoiler-btn" onclick="spoiler_click({0});">Show spoiler</button><br><div class="spoiler" id="spoiler_num{0}" data-down="false" style="visibility:hidden; position:absolute;">'.f(spoiler_id++), '</div>']});
+BBCodeParser.add_tag("uva", function(arg){return [UvaTracker.get_problem_format(arg)]}, false);
 
 /* Add smileys */
 function get_smiley_callback(unicode, alt)
@@ -191,6 +192,7 @@ for(var key in smileys)
 	}
 }
 
+// Post-process all the link tags, necessary to keep the parser O(n)
 function update_urls()
 {
 	$(".bbcode-incomplete-url").each(function(index)
