@@ -15,7 +15,7 @@ var UvaTracker = (function()
 	var uhunt_user_submissions_url = uhunt_domain + "subs-user/{0}"; // Param: user ID
 	var uhunt_all_problems_url = uhunt_domain + "p";
 	
-	var uva_problem_url = "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}?category=";
+	var uva_problem_url = "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}&category=";
 
 	// HTML tags IDs
 	var html_id_last_submissions_table = "#lastsubmissions";
