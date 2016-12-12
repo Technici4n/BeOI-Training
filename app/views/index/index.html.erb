@@ -1,4 +1,16 @@
-<% require "json" %>
+<% require "json" %><!-- -->
+
+<!-- Show reminders for the next week (if any) -->
+<% if @reminders.any? %>
+	<div class="alert alert-info" role="alert">
+		<strong>Don't forget about these events:</strong>
+		<ul>
+			<% @reminders.each do |r| %>
+				<li><%= r.title %>, <em>the <%= ApplicationHelper.datetime_to_s(r.time) %></em>.</li>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
 
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
@@ -48,18 +60,18 @@
 	{
 		UvaTracker.last_submissions(submissions_ready);
 	});
-	
+
 	function submissions_ready()
 	{
 		UvaTracker.top_solvers(14);
 		UvaTracker.append_submissions(20);
 	}
-	
+
 	$('#option1').click(function()
 	{
 		UvaTracker.top_solvers(14);
 	});
-	
+
 	$('#option2').click(function()
 	{
 		UvaTracker.top_solvers(14, true);

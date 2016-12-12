@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reminded: false
+  description: MyText
+  title: MyString
+  message: MyText
+
+two:
+  reminded: false
+  description: MyText
+  title: MyString
+  message: MyText

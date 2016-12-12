@@ -9,11 +9,12 @@ class IndexController < ApplicationController
 			user_list = User.all
 		end
 		@users = user_list.map{ |u| [u.id, ["", u.uva, u.display_name, u.id == session[:user_id], u.is_contestant]] }.to_h
+		@reminders = Reminder.where("time < ?", Time.now + 1.week)
 	end
-	
+
 	def tracker
 	end
-	
+
 	def test
 	end
 	#Evil HTTPS hack

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-	
+
 	# User management
 	get "/users/signup", to: "users#signup"
 	post "/users/create", to: "users#create"
@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 	get "/users/logout", to: "users#logout"
 	get "/users/profile", to: "users#profile"
 	patch "/users/profile", to: "users#update"
-	
+
 	# Forum
 	get "/subjects", to: "subjects#index"
 	get "/subjects/new", to: "subjects#new"
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 	patch "/subjects/:subject_id/toggle_pinned", to: "subjects#toggle_pinned"
 	put "/subjects/:subject_id/start_following", to: "subjects#start_following_subject"
 	delete "/subjects/:subject_id/stop_following", to: "subjects#stop_following_subject"
-	
+
 	# Problemsets
 	get "/problemsets", to: "problemsets#index"
 	get "/problemsets/edit", to: "problemsets#edit"
@@ -28,7 +28,14 @@ Rails.application.routes.draw do
 	post "/problemsets/:problemset_id/edit", to: "problemsets#create_problem"
 	delete "/problemsets/remove/:problem_id", to: "problemsets#remove_problem"
 	patch "/problemsets/:problemset_id/update", to: "problemsets#update"
-	
+
+	# Reminders
+	get "/reminders", to: "reminders#index"
+	post "/reminders", to: "reminders#create"
+	get "/reminders/:reminder_id/edit", to: "reminders#edit"
+	patch "/reminders/:reminder_id/edit", to: "reminders#update"
+	delete "/reminders/:reminder_id/delete", to: "reminders#delete"
+
 	# Admin tools
 	get "/admin", to: "admin#index"
 	patch "/admin/update_event", to: "admin#update_event"
@@ -37,9 +44,9 @@ Rails.application.routes.draw do
 	# Misc.
 	get "/test", to: "index#test" if Rails.env.development?
 	get "/codeforces", to: "index#codeforces_request"
-	
+
 	root "index#index"
-	
+
 	# Default route
 	match "*path", to: "errors#show404", via: :all unless Rails.env.development?
 end

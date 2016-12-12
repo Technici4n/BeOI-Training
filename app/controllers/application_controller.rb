@@ -2,12 +2,30 @@ class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
 	helper_method :show_error, :get_error_format, :get_success_format, :get_info_format
 
+	# Make sure the reminder emails get sent
+	before_action :send_mails
+	before_action :remove_past_reminders
+
+	# Send emails 1 day before an event
+	def send_mails
+		Reminder.where(time: Time.now..(Time.now + 1.day), reminded: false).each do |r|
+			User.all.each do |u|
+				Pony.mail(:to => u.email, :subject => r.title, :html_body => "<p>Just a quick reminder... Don't forget about this event, planned the #{ApplicationHelper.datetime_to_s(r.time)}:</p><h4>#{r.title}</h4><p>#{r.description}</p>.Yours truly,<br>The BeOI Training team.")
+			end
+			r.update(reminded: true)
+		end
+	end
+
+	def remove_past_reminders
+		Reminder.where("time < ?", Time.now).destroy_all
+	end
+
 	# Add the error ("msg") to the errors to be alerted
 	def show_error(msg)
 		session[:errors] ||= []
 		session[:errors] << msg
 	end
-	
+
 	# Returns the error HTML code, and clears the error list
 	def get_error_format
 		errors = session[:errors]
@@ -24,7 +42,7 @@ class ApplicationController < ActionController::Base
 		session[:errors] = []
 		return out.html_safe
 	end
-	
+
 	# Returns the success HTML code
 	def get_success_format
 		msg = session[:success]
@@ -37,7 +55,7 @@ class ApplicationController < ActionController::Base
 		session[:success] = nil
 		return out.html_safe
 	end
-	
+
 	# Returns the info HTML code
 	def get_info_format
 		msg = session[:info]
@@ -50,7 +68,7 @@ class ApplicationController < ActionController::Base
 		session[:info] = nil
 		return out.html_safe
 	end
-	
+
 	# Check if str is at least lgth charachters long
 	def validate_length(str, field_name, lgth, max_lgth = 1.0/0.0)
 		if str && str.length >= lgth && str.length <= max_lgth
@@ -64,7 +82,7 @@ class ApplicationController < ActionController::Base
 			return false
 		end
 	end
-	
+
 	# Check identity
 	def validate_identity(str1, str2, field_name1, field_name2)
 		if str1 == str2
@@ -74,7 +92,7 @@ class ApplicationController < ActionController::Base
 			return false
 		end
 	end
-	
+
 	# Check RegEx
 	def validate_regex(str, regex, field_name, format_info = nil)
 		match = regex.match(str)
@@ -88,7 +106,7 @@ class ApplicationController < ActionController::Base
 			end
 		end
 	end
-	
+
 	# Check uniqueness for "val" inside the "database_entry" field of the "model_class" model
 	def validate_uniqueness(model_class, database_entry, val, field_name)
 		if !val || model_class.find_by(database_entry.to_sym => val)
@@ -98,7 +116,7 @@ class ApplicationController < ActionController::Base
 			return true
 		end
 	end
-	
+
 	# Check if length > 0
 	def validate_existing(str, field_name)
 		if str && str.length > 0
@@ -108,7 +126,7 @@ class ApplicationController < ActionController::Base
 			return false
 		end
 	end
-	
+
 	protected
 		# Keeps the user logged in over multiple pages
 		def authenticate_user(kick = true)

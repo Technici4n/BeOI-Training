@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+	<div class="panel-heading" style="font-size: 24px;">
+		<span style="color:#235064;"><strong>Reminders</strong></span>
+	</div>
+	<div class="panel-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Time</th>
+					<th>Description</th>
+          <th colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Reminder.order(:time).each do |reminder| %>
+            <tr>
+              <td><strong><%= reminder.title %></strong></td>
+              <td><%= ApplicationHelper.datetime_to_s(reminder.time) %></td>
+							<td><%= truncate(reminder.description) %></td> <!-- Make sure we don't get out of bounds ;) -->
+              <td><%= link_to "Edit", "/reminders/#{reminder.id}/edit" %></td>
+							<td><%= link_to "Delete", "/reminders/#{reminder.id}/delete", method: :delete %></td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+		<%= form_for :reminder, url: "/reminders" do |f| %>
+
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Title" %>
+				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
+			</div>
+
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Description" %>
+				<%= f.text_area :description, placeholder: "Description", class: "form-control", style: "width: 500px; height: 150px;" %>
+			</div>
+
+			<div class="form-group">
+				<%= ApplicationHelper.f_label "Time" %><br>
+				<%= f.datetime_select :time, {:start_year => Date.today.year, :end_year => Date.today.year + 4}, {:class => "form-control", style:"display: inline; width: auto;"} %>
+			</div>
+
+			<%= f.submit :class => "btn btn-primary" %>
+
+		<% end %>
+  </div>
+</div>
