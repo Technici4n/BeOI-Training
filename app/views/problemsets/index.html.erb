@@ -1,7 +1,7 @@
-<% users = User.where(is_contestant: true).all.each do |u| %>
+<% @users.each do |u| %>
 	<% u.initials = u.display_name.split.map{|s| s[0]}.map(&:capitalize).join("") unless u.initials && u.initials != "" %>
 <% end %>
-<% users = users.sort_by{|u| u.initials} %>
+<% @users = @users.sort_by{|u| u.initials} %>
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size: 24px;">
 		<span style="color:#235064;"><strong>Problems</strong>
@@ -17,20 +17,20 @@
 					<tr>
 						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
 						<th>Difficulty</th>
-						<% users.each do |u| %>
+						<% @users.each do |u| %>
 							<th title="<%= u.display_name %>"><%= u.initials %></th>
 						<% end %>
 					</tr>
 				</thead>
 				<tbody>
 					<% ps.problems.sort_by{|pb| pb.difficulty}.each do |pb| %>
-						<% case pb.website 
+						<% case pb.website
 						   when 0 %> <!-- UVa -->
 							<tr class="uva-problem">
 								<td><a target="_blank" href="https://uva.onlinejudge.org/">UVa Onlinejudge</a></td>
 								<td class="problem-format" data-pnum="<%= pb.handle %>"><%= pb.handle %> - Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
-								<% users.each do |u| %>
+								<% @users.each do |u| %>
 									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
 								<% end %>
 							</tr>
@@ -39,7 +39,7 @@
 								<td><a target="_blank" href="http://codeforces.com/">Codeforces</a></td>
 								<td class="problem-format" data-phandle="<%= pb.handle %>"><%= pb.handle %> - Unknown Problem</td>
 								<td><%= ProblemsetsHelper.difficulty_to_s(pb.difficulty) %></td>
-								<% users.each do |u| %>
+								<% @users.each do |u| %>
 									<td class="user-submission" data-user="<%= u.id %>"><span title="Not tried">-</span></td>
 								<% end %>
 							</tr>
@@ -52,7 +52,7 @@
 </div>
 
 <%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
-<%= javascript_tag "var cf_users = #{Hash[users.map{|u| [u.id, u.codeforces]}].to_json};" %>
+<%= javascript_tag "var cf_users = #{Hash[@users.select{|u| u.codeforces != ""}.map{|u| [u.id, u.codeforces]}].to_json};" %>
 <script type="text/javascript">
 $(function()
 {
@@ -61,7 +61,7 @@ $(function()
 		UvaTracker.initialize_specific_tracker();
 		show_uva();
 	});
-	
+
 	CodeforcesTracker.initialize_specific_tracker(show_codeforces);
 	CodeforcesTracker.initialize_problem_info(show_codeforces_problems);
 });

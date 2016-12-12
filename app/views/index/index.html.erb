@@ -1,5 +1,6 @@
 <% require "json" %><!-- -->
-
+<!-- Just in case the page is 'render'ed -->
+<% @reminders = Reminder.where("time < ?", Time.now + 1.week) %>
 <!-- Show reminders for the next week (if any) -->
 <% if @reminders.any? %>
 	<div class="alert alert-info" role="alert">

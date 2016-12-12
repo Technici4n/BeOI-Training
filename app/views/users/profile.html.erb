@@ -4,40 +4,40 @@
 	</div>
 	<div class="panel-body">
 	<%= form_for :user, url: "/users/profile", method: :patch do |f| %>
-	
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:uva) %><br>
 			<%= f.text_field :uva, class: "form-control", placeholder: t(:uva) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:codeforces) %><br>
 			<%= f.text_field :codeforces, class: "form-control", placeholder: t(:codeforces) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:display_name) %><br>
 			<%= f.text_field :display_name, class: "form-control", placeholder: t(:display_name) %>
 			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:initials) %><br>
 			<%= f.text_field :initials, class: "form-control", placeholder: t(:initials) %>
 		</div>
-		
+
 		<div class="checkbox">
 			<%= f.check_box :is_contestant %>
 			I am a BeCP contestant
 		</div>
-		
-		<div class="checkbox">
+
+		<!--<div class="checkbox">
 			<%= f.check_box :in_event %>
 			<%= Event.last.participation_text %>
-		</div>
-		
+		</div>-->
+
 		<%= f.submit "Update account", :class => "btn btn-primary" %>
-		
+
 	<% end %>
 	</div>
 </div>
