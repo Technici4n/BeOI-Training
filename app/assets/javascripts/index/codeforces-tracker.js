@@ -23,6 +23,9 @@ var CodeforcesTracker = (function()
 	// {..., id: {problem_id1: 0 (for tried), problem_id2: 1 (for accepted), problem_id3: 1 (for accepted), ...}, ...}
 	var problems_by_user;
 
+	// 2 on load, then 3 every next time.
+	var max_requests;
+
 	// Update one user's data, by sending a request to Codeforces
 	function send_submission_request(ruby_user_id, handle)
 	{
@@ -66,7 +69,7 @@ var CodeforcesTracker = (function()
 		var users_data = JSON.parse(localStorage["codeforces_user_updates"] || "[]");
 		var sorted_data = users_data.sort();
 		var update_requests = [];
-		for(var i = 0; i < 2 && i < sorted_data.length; ++i)
+		for(var i = 0; i < max_requests && i < sorted_data.length; ++i)
 		{
 			// Send request
 			update_requests.push(send_submission_request(sorted_data[i][1], sorted_data[i][2]));
@@ -80,6 +83,7 @@ var CodeforcesTracker = (function()
 			localStorage["codeforces_submissions"] = JSON.stringify(problems_by_user);
 			localStorage["codeforces_user_updates"] = JSON.stringify(sorted_data);
 
+			max_requests = 3;
 			callback();
 
 			// Repeat every 2 minutes
@@ -120,6 +124,7 @@ var CodeforcesTracker = (function()
 		initialize_specific_tracker: function(callback)
 		{
 			// 0. Initialize al variables
+			max_requests = 2;
 			update_user_list();
 			problems_by_user = JSON.parse(localStorage["codeforces_submissions"] || "{}");
 			callback();
