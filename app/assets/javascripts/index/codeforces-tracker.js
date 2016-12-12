@@ -66,7 +66,7 @@ var CodeforcesTracker = (function()
 		var users_data = JSON.parse(localStorage["codeforces_user_updates"] || "[]");
 		var sorted_data = users_data.sort();
 		var update_requests = [];
-		for(var i = 0; i < 4 && i < sorted_data.length; ++i)
+		for(var i = 0; i < 2 && i < sorted_data.length; ++i)
 		{
 			// Send request
 			update_requests.push(send_submission_request(sorted_data[i][1], sorted_data[i][2]));
