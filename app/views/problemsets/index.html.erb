@@ -52,7 +52,7 @@
 </div>
 
 <%= javascript_tag "var users = #{IndexHelper.users_to_hash(session).to_json};" %>
-<%= javascript_tag "var cf_users = #{Hash[@users.select{|u| u.codeforces != ""}.map{|u| [u.id, u.codeforces]}].to_json};" %>
+<%= javascript_tag "var cf_users = #{Hash[@users.select{|u| u.codeforces && u.codeforces != ""}.map{|u| [u.id, u.codeforces]}].to_json};" %>
 <script type="text/javascript">
 $(function()
 {
