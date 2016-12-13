@@ -131,12 +131,12 @@ var CodeforcesTracker = (function()
 				// 1. Get some new submission if HTTP is being used
 				if(window.location.protocol != "https:")
 				{
-					if(localStorage["codeforces_last_update"] + 60 > Math.floor(Date.now() / 1000)) // Make sure there was no update done in the previous minutes
+					if(localStorage["codeforces_last_update"] + 15 > Math.floor(Date.now() / 1000)) // Make sure there was no update done in the previous seconds
 					{
 						update_users(callback);
 					}
 					// Schedule every 2 minutes
-					setInterval(function(){update_users(callback);}, 2*60*1000);
+					setInterval(function(){update_users(callback);}, 15*1000);
 				}
 			}
 		},
