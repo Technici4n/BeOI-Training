@@ -2,6 +2,23 @@
 	<% u.initials = u.display_name.split.map{|s| s[0]}.map(&:capitalize).join("") unless u.initials && u.initials != "" %>
 <% end %>
 <% @users = @users.sort_by{|u| u.initials} %>
+
+<div class="alert alert-warning" id="https-alert" role="alert" style="visibility: hidden; position: absolute;">
+	Codeforces problems are only updated over <strong>HTTP</strong>, but they are then stored so you could access them from HTTPS.
+</div>
+
+<script type="text/javascript">
+// Only show if HTTPS
+$(function()
+{
+	if(window.location.protocol == "https:")
+	{
+		$("#https-alert").css("position", "relative");
+		$("#https-alert").css("visibility", "visible");
+	}
+});
+</script>
+
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size: 24px;">
 		<span style="color:#235064;"><strong>Problems</strong>

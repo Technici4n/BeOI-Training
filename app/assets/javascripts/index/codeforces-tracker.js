@@ -26,6 +26,9 @@ var CodeforcesTracker = (function()
 	// 2 on load, then 3 every next time.
 	var max_requests;
 
+	// Don't run requests simultaneously
+	var running = false;
+
 	// Update one user's data, by sending a request to Codeforces
 	function send_submission_request(ruby_user_id, handle)
 	{
@@ -60,11 +63,6 @@ var CodeforcesTracker = (function()
 	// Update user data
 	function update_users(callback)
 	{
-		if(localStorage["codeforces_last_update"] + 60 > Math.floor(Date.now() / 1000)) // Make sure there was no update done in the previous minutes
-		{
-			setInterval(function(){update_users(callback);}, 2*60*1000);
-			return;
-		}
 		// Get saved data
 		var users_data = JSON.parse(localStorage["codeforces_user_updates"] || "[]");
 		var sorted_data = users_data.sort();
@@ -83,11 +81,9 @@ var CodeforcesTracker = (function()
 			localStorage["codeforces_submissions"] = JSON.stringify(problems_by_user);
 			localStorage["codeforces_user_updates"] = JSON.stringify(sorted_data);
 
+			localStorage["codeforces_last_update"] = Math.floor(Date.now() / 1000);
 			max_requests = 3;
 			callback();
-
-			// Repeat every 2 minutes
-			setInterval(function(){update_users(callback);}, 2*60*1000);
 		});
 	}
 
@@ -123,16 +119,25 @@ var CodeforcesTracker = (function()
 		// Update and load data for queries
 		initialize_specific_tracker: function(callback)
 		{
-			// 0. Initialize al variables
-			max_requests = 2;
-			update_user_list();
-			problems_by_user = JSON.parse(localStorage["codeforces_submissions"] || "{}");
-			callback();
-
-			// 1. Get some new submission if HTTP is being used
-			if(window.location.protocol != "https:")
+			if(!running)
 			{
-				update_users(callback);
+				// 0. Initialize al variables
+				running = true;
+				max_requests = 2;
+				update_user_list();
+				problems_by_user = JSON.parse(localStorage["codeforces_submissions"] || "{}");
+				callback();
+
+				// 1. Get some new submission if HTTP is being used
+				if(window.location.protocol != "https:")
+				{
+					if(localStorage["codeforces_last_update"] + 60 > Math.floor(Date.now() / 1000)) // Make sure there was no update done in the previous minutes
+					{
+						update_users(callback);
+					}
+					// Schedule every 2 minutes
+					setInterval(function(){update_users(callback);}, 2*60*1000);
+				}
 			}
 		},
 		// Prepare for problem info queries (very long so it's separated)
@@ -175,3 +180,9 @@ var CodeforcesTracker = (function()
 	};
 	return ret;
 })();
+
+$(function()
+{
+	// Update submissions if possible
+	setTimeout(function(){CodeforcesTracker.initialize_specific_tracker(function(){})}, 200);
+});
