@@ -29,10 +29,10 @@ $(function()
 	</div>
 	<div class="panel-body">
 		<table class="table">
-			<% Problemset.where(visible: true).sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
-				<thead>
+            <% (if !@current_user or !@current_user.admin? then Problemset.where(visible: true) else Problemset.all end).sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
+                <thead <% if !ps.visible %>class=""<% end %>>
 					<tr>
-						<th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)</th>
+                        <th colspan="2"><%= ps.title %> (<%= pluralize(ps.problems.count, "problem")%>)<% if !ps.visible %> <span class="red">[hidden]</span><% end %></th>
 						<th>Difficulty</th>
 						<% @users.each do |u| %>
 							<th title="<%= u.display_name %>"><%= u.initials %></th>
