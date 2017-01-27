@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 	def send_mails
 		Reminder.where(time: Time.now..(Time.now + 1.day), reminded: false).each do |r|
 			User.all.each do |u|
-				Pony.mail(:to => u.email, :subject => r.title, :html_body => "<p>Just a quick reminder... Don't forget about this event, planned the #{ApplicationHelper.datetime_to_s(r.time)}:</p><h4>#{r.title}</h4><p>#{r.description}</p>.Yours truly,<br>The BeOI Training team.")
+				Pony.mail(:to => u.email, :subject => r.title, :html_body => "<p>Hi #{u.display_name},</p><p>Just a quick reminder... Don't forget about this event, planned the #{ApplicationHelper.datetime_to_s(r.time)}:</p><h4>#{r.title}</h4><p>#{r.description}</p>Yours truly,<br>The BeOI Training team.")
 			end
 			r.update(reminded: true)
 		end
