@@ -1,15 +1,15 @@
 if Rails.env != 'test'
-	Pony.options = 
+	Pony.options =
 	{
-		:from => ENV['GMAIL_USER_NAME'],
+		:from => ENV['MAIL_USER_NAME'],
 		:via => :smtp,
 		:via_options =>
 		{
-			address: 'smtp.gmail.com',
+			address: 'smtp.mail.com',
 			port: '587',
-			domain: 'gmail.com',
-			user_name: ENV['GMAIL_USER_NAME'],
-			password: ENV['GMAIL_PASSWORD'],
+			domain: 'mail.com',
+			user_name: ENV['MAIL_USER_NAME'],
+			password: ENV['MAIL_PASSWORD'],
 			authentication: :plain,
 			enable_starttls_auto: true
 		}
