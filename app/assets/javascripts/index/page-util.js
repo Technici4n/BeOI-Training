@@ -57,7 +57,7 @@ function cursor_insert(before_text, after_text, elem_id)
 	if(document.selection)
 	{
 		element.focus();
-		
+
 		var sel = document.selection.createRange();
 		if(after_text != "")
 		{
@@ -75,13 +75,13 @@ function cursor_insert(before_text, after_text, elem_id)
 		{
 			element.selectionEnd = element.value.length;
 		}
-		
+
 		var first = element.selectionStart;
 		var second = element.selectionEnd + before_text.length;
-		
+
 		element.value = element.value.slice(0, first) + before_text + element.value.slice(first);
 		element.value = element.value.slice(0, second) + after_text + element.value.slice(second);
-		
+
 		element.selectionStart = first + before_text.length;
 		element.selectionEnd = second;
 		element.focus();
@@ -125,6 +125,7 @@ function handle_message_changes(e, should_remove_preview_if_empty_message)
 		$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
 		PR.prettyPrint();
 		$('#dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "dynamic-preview"]);
 	}
 	update_urls();
 }
