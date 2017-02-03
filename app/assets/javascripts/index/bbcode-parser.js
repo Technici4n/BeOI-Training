@@ -204,7 +204,7 @@ function update_urls()
 	});
 }
 
-$(function() // Auto-parse BBCode once the page is loaded
+$(document).on("turbolinks:load", function() // Auto-parse BBCode once the page is loaded
 {
 	$(".bb-code").each(function(index)
 	{
@@ -212,4 +212,5 @@ $(function() // Auto-parse BBCode once the page is loaded
 		$(this).html(BBCodeParser.parse($(this).html()));
 	});
 	update_urls();
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 });
