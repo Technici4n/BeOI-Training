@@ -14,28 +14,6 @@ String.prototype.format = String.prototype.f = function()
 	return s;
 };
 
-String.prototype.split = function(c)
-{
-	var ans = [];
-	var curr = "";
-	for(var i = 0; i < this.length; ++i)
-	{
-		if(this[i] == c)
-		{
-			if(curr != "")
-				ans.push(curr);
-			curr = "";
-		}
-		else
-		{
-			curr += this[i];
-		}
-	}
-	if(curr != "")
-		ans.push(curr)
-	return ans;
-};
-
 String.prototype.fix_left = function(str, padding)
 {
 	return String(str + this).slice(-padding);
