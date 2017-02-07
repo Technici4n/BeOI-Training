@@ -41,6 +41,7 @@ class UsersController < ApplicationController
 		@user.unread_subjects = 0
 		@user.username.downcase!
 		@user.email.downcase!
+		@user.should_notify_new_subjects = false
 		if @user.save
 			session[:success] = "Your account has been created. You are now logged in. Welcome, <strong>#{@user.display_name}</strong> !"
 			session[:user_id] = @user.id

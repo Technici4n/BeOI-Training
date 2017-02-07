@@ -4,11 +4,18 @@
 <div class="panel panel-default">
 	<div class="panel-heading" style="font-size:24px;">
 		<strong>Forum</strong>
+		<!-- Following (only if the user is logged in) -->
+		<div style="float: right;">
+			<% if @current_user %>
+				<% if @current_user.should_notify_new_subjects %>
+					<%= link_to "Stop following the forum", "/subjects/stop_following_forum", method: :delete, class: "btn btn-default btn-gray" %>
+				<% else %>
+					<%= link_to "Follow the forum", "/subjects/start_following_forum", method: :put, data: {confirm: "You will receive a mail for every new subject posted on the forum."}, class: "btn btn-default btn-gray" %>
+				<% end %>
+			<% end %>
+		</div>
 	</div>
 	<div class="panel-body">
-		<!--<div class="subjects-heading">
-			<div class="text">Welcome to the forum!</div>
-		</div>-->
 		<table class="subjects-table">
 			<thead>
 				<tr>
@@ -61,11 +68,11 @@
 				<% end %>
 			</tbody>
 		</table>
-		
+
 		<% if session[:user_id] %>
 			<center><%= link_to "New Subject", "/subjects/new", class: "btn btn-lg btn-primary btn-gray", style: "margin: 20px 0 0 0;" %></center>
 		<% end %>
-		
+
 		<!-- Pagination -->
 		<center><%= will_paginate @subjects %></center>
 	</div>

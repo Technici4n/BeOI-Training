@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170107183806) do
+ActiveRecord::Schema.define(version: 20170131210340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,9 +87,10 @@ ActiveRecord::Schema.define(version: 20170107183806) do
     t.string   "title"
     t.integer  "category"
     t.boolean  "pinned"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.integer  "views"
+    t.datetime "last_message_time"
   end
 
   create_table "user_groups", force: :cascade do |t|
@@ -105,9 +106,9 @@ ActiveRecord::Schema.define(version: 20170107183806) do
     t.string   "email"
     t.string   "hashed_password"
     t.string   "salt"
-    t.boolean  "admin",            null: false
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.boolean  "admin",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "display_name"
     t.boolean  "is_contestant"
     t.boolean  "in_event"
@@ -115,6 +116,7 @@ ActiveRecord::Schema.define(version: 20170107183806) do
     t.integer  "unread_subjects"
     t.string   "codeforces"
     t.string   "initials"
+    t.boolean  "should_notify_new_subjects"
   end
 
 end

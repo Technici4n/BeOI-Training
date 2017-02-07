@@ -1,4 +1,4 @@
-Rails.application.routes.draw do
+ Rails.application.routes.draw do
 
 	# User management
 	get "/users/signup", to: "users#signup"
@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 	get "/subjects", to: "subjects#index"
 	get "/subjects/new", to: "subjects#new"
 	post "/subjects/new", to: "subjects#create"
+	put "/subjects/start_following_forum", to: "subjects#start_following_forum"
+	delete "/subjects/stop_following_forum", to: "subjects#stop_following_forum"
 	get "/subjects/:subject_id", to: "subjects#show"
 	post "/subjects/:subject_id", to: "subjects#create_message"
 	get "/subjects/edit/:message_id", to: "subjects#edit"
