@@ -8,9 +8,9 @@
 		<div style="float: right;">
 			<% if @current_user %>
 				<% if @current_user.should_notify_new_subjects %>
-					<%= link_to "Stop following the forum", "/subjects/stop_following_forum", method: :delete, class: "btn btn-default btn-gray" %>
+					<%= link_to "Stop following the forum", "/subjects/stop_following_forum", method: :patch, class: "btn btn-default btn-gray" %>
 				<% else %>
-					<%= link_to "Follow the forum", "/subjects/start_following_forum", method: :put, data: {confirm: "You will receive a mail for every new subject posted on the forum."}, class: "btn btn-default btn-gray" %>
+					<%= link_to "Follow the forum", "/subjects/start_following_forum", method: :patch, data: {confirm: "You will receive a mail for every new subject posted on the forum."}, class: "btn btn-default btn-gray" %>
 				<% end %>
 			<% end %>
 		</div>

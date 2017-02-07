@@ -133,16 +133,12 @@ class SubjectsController < ApplicationController
 	end
 
 	def start_following_forum
-		if @current_user
-			@current_user.update(should_notify_new_subjects: true)
-		end
+		@current_user.update(should_notify_new_subjects: true)
 		redirect_to "/subjects"
 	end
 
 	def stop_following_forum
-		if @current_user
-			@current_user.update(should_notify_new_subjects: false)
-		end
+		@current_user.update(should_notify_new_subjects: false)
 		redirect_to "/subjects"
 	end
 
@@ -185,7 +181,7 @@ class SubjectsController < ApplicationController
 			User.where(should_notify_new_subjects: true).each do |u|
 				if u.id != @current_user.id
 					begin
-						Pony.mail(:to => u.email, :subject => "BeOI-Training: New subject: \"#{subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{subject.forum_messages[0].user.display_name.html_safe} created a new subject on the forum: #{view_context.link_to subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{subject.id}"}. Make sure you check it out !<br><br>If you don't want to be noticed for new subjects anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/stop_following_forum", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
+						Pony.mail(:to => u.email, :subject => "BeOI-Training: New subject: \"#{subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{subject.forum_messages[0].user.display_name.html_safe} created a new subject on the forum: #{view_context.link_to subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{subject.id}"}. Make sure you check it out !<br><br>If you don't want to be noticed for new subjects anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/stop_following_forum", method: :patch}.<br><br>Yours truly,<br>The BeOI Training team.")
 					rescue Net::SMTPFatalError => error
 						puts "Net::SMTPFatalError caught in SubjectsController::broadcast_subject_creation. Problematic email address: #{u.email}. Error: #{error}"
 					end
