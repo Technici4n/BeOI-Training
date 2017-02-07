@@ -2,6 +2,36 @@
 	Some JS elements used in HTML (mostly in the forum)
 */
 
+jQuery.fn.custom_hide = function()
+{
+	var el = $(this[0]);
+	el.css('visibility', 'hidden');
+	el.css('position', 'absolute');
+
+	return this;
+}
+
+jQuery.fn.custom_show = function()
+{
+	var el = $(this[0]);
+	el.css('visibility', 'visible');
+	el.css('position', 'relative');
+
+	return this;
+}
+
+var PageUtil =
+{
+	// Escape html special chars
+	h: function(text)
+	{
+		// Escape special chars
+		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
+		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
+		return text.replace(/[&"><']/g, function(c){return HTML_ESCAPE[c];});
+	}
+}
+
 // "Fetch From UVa" (User's display_name)
 function fetch_uva_id()
 {
@@ -108,24 +138,23 @@ function handle_message_changes(e, should_remove_preview_if_empty_message)
 		should_remove_preview_if_empty_message = true;
 	if($('#forum_message_text').val() == "" && should_remove_preview_if_empty_message) // If empty message -> hide everything
 	{
-		$('#dynamical-preview').css('position', 'absolute');
-		$('#dynamical-preview').css('visibility', 'hidden');
+		$('#dynamical-preview').custom_hide();
 		$('#forum_message_submit').prop("disabled", false);
 	}
 	else // Else show everything and update time, message and code attribute + pretty print eventual code
 	{
-		$('#dynamical-preview').css('position', 'relative');
-		$('#dynamical-preview').css('visibility', 'visible');
-		// Escape things (uses the Rails RegExp for consistency)
-		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
-		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
-		var text = $('#forum_message_text').val().replace(/[&"><']/g, function(c){return HTML_ESCAPE[c];});
+        // Show preview
+		$('#dynamical-preview').custom_show();
+
+		// Update message preview
+		var text = $('#forum_message_text').val();
+		if(!text) // New subject creation then
+			text = $('#text').val();
+		PreviewBuffer.update(text);
+
 		$('#dynamical-preview .message').attr("data-swapped", text);
-		$('#dynamical-preview .message').html(BBCodeParser.parse(text));
-		$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
-		PR.prettyPrint();
+		//$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
 		$('#dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
-		MathJax.Hub.Queue(["Typeset",MathJax.Hub, "dynamic-preview"]);
 	}
 	update_urls();
 }

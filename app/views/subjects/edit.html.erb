@@ -21,25 +21,27 @@
 			</div>
 			<div class="body">
 				<div class="information"><%= UsersHelper.display_name(User.find(session[:user_id])) %></div>
+				<div id="math_buffer" style="visibility: hidden; position: absolute"></div>
 				<div class="message"></div>
 				<div class="last-edition">Last edited the <span class="time"></span>.</div>
 			</div>
 		</div>
 		<%= form_for @message, url: "/subjects/edit/#{@message.id}", method: :patch do |f| %>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Edited Message" %>
 				<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
 			</div>
-			
+
 			<center><%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary", :id => "forum_message_submit" %></center>
-			
+
 		<% end %>
 	</div>
 </div>
 
 <!-- Preview script -->
 <script type="text/javascript">
+PreviewBuffer.set_buffers($('#dynamical-preview .message'), 'math_buffer');
 $('#forum_message_text').on("input", function(e){handle_message_changes(e, false);});
 $(function() // Already update once because there is text in the message
 {

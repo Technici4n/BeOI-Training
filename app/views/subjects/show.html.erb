@@ -35,7 +35,7 @@
 				<%= link_to "(Toggle pinned)", "/subjects/#{@subject.id}/toggle_pinned", method: :patch %>
 			<% end %>
 		</div>
-		
+
 		<!-- All messages -->
 		<% @messages.each do |m| %>
 			<div class="message-display">
@@ -57,7 +57,7 @@
 				</div>
 			</div>
 		<% end %>
-		
+
 		<!-- New message -->
 		<% if session[:user_id] %>
 			<div class="message-display" id="dynamical-preview" style="visibility: hidden; position: absolute;">
@@ -70,20 +70,21 @@
 				</div>
 				<div class="body">
 					<div class="information"><%= UsersHelper.display_name(User.find(session[:user_id])) %></div>
+					<div id="math_buffer" style="visibility: hidden; position: absolute;"></div>
 					<div class="message"></div>
 				</div>
 			</div>
 			<%= form_for :forum_message, url: "/subjects/#{@subject.id}" do |f| %>
-			
+
 				<div class="form-group">
 					<%= ApplicationHelper.f_label "New Message" %>
 					<%= f.text_area :text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
 				</div>
-				
+
 				<center><%= f.submit :class => "btn btn-primary", :id => "forum_message_submit" %></center>
 			<% end %>
 		<% end %>
-		
+
 		<!-- Pagination -->
 		<center><%= will_paginate @messages %></center>
 	</div>
@@ -91,6 +92,7 @@
 
 <!-- Preview script -->
 <script type="text/javascript">
+PreviewBuffer.set_buffers($('#dynamical-preview .message'), 'math_buffer');
 $('#forum_message_text').on("input", handle_message_changes);
 </script>
 

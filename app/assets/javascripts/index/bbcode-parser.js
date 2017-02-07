@@ -42,7 +42,8 @@ var BBCodeParser =
 		BBCodeParser.errors =  false;
 		try
 		{
-			BBCodeParser.str = unparsed;
+			// Escape chars
+			BBCodeParser.str = PageUtil.h(unparsed);
 			BBCodeParser.text = [];
 			var str = BBCodeParser.str;
 			var pos = 0;
@@ -121,8 +122,13 @@ var BBCodeParser =
 							}
 							continue;
 						}
+						else // Add the tag to the text in text if it's unkown (otherwise it will be hard to use [] in LaTeX)
+						{
+							BBCodeParser.text.push("[{0}]".f(cmd));
+							++pos;
+						}
 						// If we reach this context, an error has occurred
-						throw 'Unexisting or incomplete opening tag: "{0}".'.f(cmd);
+						//throw 'Unexisting or incomplete opening tag: "{0}".'.f(cmd);
 					}
 				}
 			}
@@ -204,13 +210,17 @@ function update_urls()
 	});
 }
 
-$(document).on("turbolinks:load", function() // Auto-parse BBCode once the page is loaded
 {
-	$(".bb-code").each(function(index)
+	function on_page_load() // Auto-parse BBCode once the page is loaded
 	{
-		$(this).attr("data-swapped", $(this).html());
-		$(this).html(BBCodeParser.parse($(this).html()));
-	});
-	update_urls();
-	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-});
+		$(".bb-code").each(function(index)
+		{
+			$(this).attr("data-swapped", $(this).html());
+			$(this).html(BBCodeParser.parse($(this).html()));
+		});
+		update_urls();
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+	}
+	$(document).on('turbolinks:load', on_page_load);
+	$(document).on('load', on_page_load);
+}
