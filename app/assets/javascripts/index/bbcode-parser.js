@@ -43,7 +43,7 @@ var BBCodeParser =
 		try
 		{
 			// Escape chars
-			BBCodeParser.str = PageUtil.h(unparsed);
+			BBCodeParser.str = unparsed;
 			BBCodeParser.text = [];
 			var str = BBCodeParser.str;
 			var pos = 0;

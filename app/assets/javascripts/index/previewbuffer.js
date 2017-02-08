@@ -34,7 +34,7 @@ var PreviewBuffer = (function()
 		update_required = false;
 
 		// Parse BBCode
-		$('#' + buffer).html(BBCodeParser.parse(raw_text));
+		$('#' + buffer).html(BBCodeParser.parse(PageUtil.h(raw_text)));
 
 		// Enqueue
 		MathJax.Hub.Queue(["Typeset", MathJax.Hub, buffer], [mathjax_callback]);

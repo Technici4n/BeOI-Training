@@ -152,7 +152,7 @@ function handle_message_changes(e, should_remove_preview_if_empty_message)
 			text = $('#text').val();
 		PreviewBuffer.update(text);
 
-		$('#dynamical-preview .message').attr("data-swapped", text);
+		$('#dynamical-preview .message').attr("data-swapped", PageUtil.h(text));
 		//$('#forum_message_submit').prop("disabled", BBCodeParser.errors);
 		$('#dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
 	}
