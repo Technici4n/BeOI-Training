@@ -210,6 +210,7 @@ function update_urls()
 	});
 }
 
+$(function()
 {
 	function on_page_load() // Auto-parse BBCode once the page is loaded
 	{
@@ -217,10 +218,10 @@ function update_urls()
 		{
 			$(this).attr("data-swapped", $(this).html());
 			$(this).html(BBCodeParser.parse($(this).html()));
+			$(this).removeClass('bb-code');
 		});
 		update_urls();
-		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+		window["MathJax"].Hub.Queue(["Typeset", window["MathJax"].Hub]);
 	}
 	$(document).on('turbolinks:load', on_page_load);
-	$(document).on('load', on_page_load);
-}
+});
