@@ -6,21 +6,21 @@
 	</div>
 	<div class="panel-body">
 		<%= form_for :subject, url: "/subjects/new" do |f| %>
-		
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Title" %>
 				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "max-width: 500px;" %>
 			</div>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Message" %>
 				<%= text_area_tag :text, @message.text, placeholder: "Text", class: "form-control", style: "height: 150px;" %>
 			</div>
-			
+
 			<center><%= f.submit :class => "btn btn-lg btn-primary", :id => "subject_submit" %></center>
 		<% end %>
-		
-		<div id="subject-dynamical-preview" style="visibility: hidden; position: absolute;">
+
+		<div id="dynamical-preview" style="visibility: hidden; position: absolute;">
 			<div>
 				<ol class="breadcrumb" style="background-color: white; margin: 0">
 					<li><span class="icon-home"></span> <a href="/subjects/">Home</a></li>
@@ -41,6 +41,7 @@
 				</div>
 				<div class="body">
 					<div class="information"><%= UsersHelper.display_name(@current_user) %></div>
+					<div id="math_buffer" style="visibility: hidden; position: absolute"></div>
 					<div class="message"></div>
 				</div>
 			</div>
@@ -50,28 +51,20 @@
 
 <!-- Preview script -->
 <script type="text/javascript">
+PreviewBuffer.set_buffers($('#dynamical-preview .message'), "math_buffer");
 function update_preview()
 {
 	if($("#subject_title").val() == "")
 	{
-		$('#subject-dynamical-preview').css('position', 'absolute');
-		$('#subject-dynamical-preview').css('visibility', 'hidden');
+		$('#dynamical-preview').custom_hide();
 		$('#subject_submit').prop("disabled", false);
 	}
 	else
 	{
-		$('#subject-dynamical-preview').css('position', 'relative');
-		$('#subject-dynamical-preview').css('visibility', 'visible');
-		// Escape things (uses the Rails RegExp for consistency)
-		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
-		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
-		var text = $('#text').val().replace(/[&"><']/g, function(c){return HTML_ESCAPE[c];});
-		$('#subject-dynamical-preview .message').attr("data-swapped", text);
-		$('#subject-dynamical-preview .message').html(BBCodeParser.parse(text));
-		$('#subject_submit').prop("disabled", BBCodeParser.errors);
-		PR.prettyPrint();
-		$('#subject-dynamical-preview .time').html(timestamp_to_string(Math.floor(Date.now() / 1000)));
-		$('#subject-dynamical-preview .subject-title').html($("#subject_title").val());
+		handle_message_changes();
+
+		// Subject specific stuff
+		$('#dynamical-preview .subject-title').html(PageUtil.h($("#subject_title").val()));
 	}
 	update_urls();
 }
