@@ -14,8 +14,8 @@ jQuery.fn.custom_hide = function()
 jQuery.fn.custom_show = function()
 {
 	var el = $(this[0]);
-	el.css('visibility', 'visible');
 	el.css('position', 'relative');
+	el.css('visibility', 'visible');
 
 	return this;
 }

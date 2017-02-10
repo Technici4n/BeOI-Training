@@ -15,6 +15,9 @@
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				extensions: ["tex2jax.js", "Safe.js"],
+				Tex: {
+					extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]
+				},
 				tex2jax: {
 					inlineMath: [['$','$'], ['\\(','\\)']],
 					processEscapes: true // Allow \$ for a literal $
