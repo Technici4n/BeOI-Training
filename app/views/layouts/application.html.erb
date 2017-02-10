@@ -21,7 +21,7 @@
 				},
 				jax: ["input/TeX", "output/HTML-CSS"],
 				messageStyle: "none",
-				showMathManu: false,
+				showMathMenu: false,
 				skipStartupTypeset: true
 			});
 		</script>
@@ -37,6 +37,15 @@
 	</head>
 
 	<body>
+		<!-- Parse BBCode and LaTeX on page load -->
+		<script type="text/javascript">
+			$(function()
+			{
+				BBCodeParser.parse_on_page();
+				PreviewBuffer.parse_on_page();
+			});
+		</script>
+
 		<%= render "shared/navbar" %>
 		<div class="container">
 			<%= render "shared/errors" %>

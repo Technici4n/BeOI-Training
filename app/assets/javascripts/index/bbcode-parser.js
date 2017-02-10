@@ -210,18 +210,14 @@ function update_urls()
 	});
 }
 
-$(function()
+// Parse BBCode on page
+BBCodeParser.parse_on_page = function()
 {
-	function on_page_load() // Auto-parse BBCode once the page is loaded
+	$(".bb-code").each(function(index)
 	{
-		$(".bb-code").each(function(index)
-		{
-			$(this).attr("data-swapped", $(this).html());
-			$(this).html(BBCodeParser.parse($(this).html()));
-			$(this).removeClass('bb-code');
-		});
-		update_urls();
-		window["MathJax"].Hub.Queue(["Typeset", window["MathJax"].Hub]);
-	}
-	$(document).on('turbolinks:load', on_page_load);
-});
+		$(this).attr("data-swapped", $(this).html());
+		$(this).html(BBCodeParser.parse($(this).html()));
+		$(this).removeClass('bb-code');
+	});
+	update_urls();
+};

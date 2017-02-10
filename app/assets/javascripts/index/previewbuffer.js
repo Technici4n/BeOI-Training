@@ -64,3 +64,23 @@ var PreviewBuffer = (function()
 	};
 	return ret;
 })();
+
+// Parse LaTeX on page
+PreviewBuffer.parse_on_page = function()
+{
+	var interval;
+
+	function on_timeout()
+	{
+		if(window.MathJax && window.MathJax.isReady) // Is MathJax done loading ?
+		{
+			clearInterval(interval);
+			window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub]);
+		}
+	}
+
+	if(!window.MathJax || !window.MathJax.isReady)
+	{
+		this.timeout = setInterval(on_timeout, 200); // Check every 200 ms
+	}
+};
