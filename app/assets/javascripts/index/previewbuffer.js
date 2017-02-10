@@ -70,6 +70,7 @@ PreviewBuffer.parse_on_page = function()
 {
 	if(PreviewBuffer.interval)
 	{
+		window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub]);
 		return;
 	}
 
