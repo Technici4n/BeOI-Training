@@ -4,7 +4,7 @@
 <%	def category_name(id)
 		case id
 		when 0
-			return "UVa Onlinejudge"
+			return "UVa"
 		when 1
 			return "Codeforces"
 		end
@@ -26,12 +26,12 @@
 				<div class="form-group">
 					<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
 				</div>
-				
+
 				<div class="checkbox">
 					<%= f.check_box :visible %>
 					Visible
 				</div>
-				
+
 				<%= f.submit :style => "margin-bottom: 20px;", :class => "btn btn-primary" %>
 			<% end %>
 			Created the <%= ApplicationHelper.datetime_to_s(@problemset.created_at) %>.
@@ -56,26 +56,26 @@
 				<% end %>
 			</tbody>
 		</table>
-		
+
 		<h4><strong>New problem</strong></h4>
 		<%= form_for :problem, url: "/problemsets/#{@problemset.id}/edit" do |f| %>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Website" %><br>
 				<%= f.select :website, [["UVa Onlinejudge", 0], ["Codeforces", 1]], {}, {:class => "form-control", :style => "width: 300px;"} %>
 			</div>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Problem (ID for UVa Onlinejudge, Handle (ex: 375E) for Codeforces)" %><br>
 				<%= f.text_field :handle, placeholder: "Problem", class: "form-control", style: "width: 300px;", :autofocus => true %>
 			</div>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "Difficulty" %><br>
 				<%= f.select :difficulty, [["Trivial", 0], ["Very easy", 1], ["Easy", 2], ["Medium easy", 3], ["Medium", 4], ["Medium advanced", 5], ["Advanced", 6], ["Advanced hard", 7], ["Hard", 8], ["Very hard", 9]],
 											{}, {:class => "form-control", :style => "width: 300px;"} %>
 			</div>
-			
+
 			<%= f.submit :style => "margin-bottom: 10px;", :class => "btn btn-primary" %>
 		<% end %>
 	</div>
