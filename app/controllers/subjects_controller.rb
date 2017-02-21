@@ -52,6 +52,7 @@ class SubjectsController < ApplicationController
 			@subject.save
 			@message.subject = @subject
 			@message.save
+			@subject.last_message_time = @message.created_at
 			@subject.forum_messages << @message
 			@subject.update(forum_messages: @subject.forum_messages, last_message_time: @message.created_at)
 
@@ -102,7 +103,7 @@ class SubjectsController < ApplicationController
 			# Send mail to followers
 			@subject.following_users.each do |u|
 				if u != @current_user
-					Pony.mail(:to => u.email, :subject => "BeOI-Training: New message in followed subject \"#{@subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{@current_user.display_name.html_safe} posted a new message in a subject that you follow, #{view_context.link_to @subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{@subject.id}"}. You can read that message #{view_context.link_to "here", "#{ENV['APP_URL']}/subjects/#{@subject.id}"}.<br><br>If you don't want to follow this subject anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/#{@subject.id}", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
+					send_safe_mail(:to => u.email, :subject => "BeOI-Training: New message in followed subject \"#{@subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{@current_user.display_name.html_safe} posted a new message in a subject that you follow, #{view_context.link_to @subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{@subject.id}"}. You can read that message #{view_context.link_to "here", "#{ENV['APP_URL']}/subjects/#{@subject.id}"}.<br><br>If you don't want to follow this subject anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/#{@subject.id}", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
 				end
 			end
 			redirect_to "/subjects/#{@subject.id}?page=last"
@@ -180,11 +181,7 @@ class SubjectsController < ApplicationController
 		def broadcast_subject_creation(subject)
 			User.where(should_notify_new_subjects: true).each do |u|
 				if u.id != @current_user.id
-					begin
-						Pony.mail(:to => u.email, :subject => "BeOI-Training: New subject: \"#{subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{subject.forum_messages[0].user.display_name.html_safe} created a new subject on the forum: #{view_context.link_to subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{subject.id}"}. Make sure you check it out !<br><br>If you don't want to be notified for new subjects anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/stop_following_forum", method: :patch}.<br><br>Yours truly,<br>The BeOI Training team.")
-					rescue Net::SMTPFatalError => error
-						puts "Net::SMTPFatalError caught in SubjectsController::broadcast_subject_creation. Problematic email address: #{u.email}. Error: #{error}"
-					end
+					send_safe_mail(:to => u.email, :subject => "BeOI-Training: New subject: \"#{subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{subject.forum_messages[0].user.display_name.html_safe} created a new subject on the forum: #{view_context.link_to subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{subject.id}"}. Make sure you check it out !<br><br>If you don't want to be notified for new subjects anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/stop_following_forum", method: :patch}.<br><br>Yours truly,<br>The BeOI Training team.")
 				end
 			end
 		end

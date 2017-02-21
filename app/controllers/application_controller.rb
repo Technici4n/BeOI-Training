@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 	def send_mails
 		Reminder.where(time: Time.now..(Time.now + 1.day), reminded: false).each do |r|
 			User.all.each do |u|
-				Pony.mail(:to => u.email, :subject => r.title, :html_body => "<p>Hi #{u.display_name.html_safe},</p><p>Just a quick reminder... Don't forget about this event, planned the #{ApplicationHelper.datetime_to_s(r.time)}:</p><h4>#{r.title}</h4><p>#{r.description}</p>Yours truly,<br>The BeOI Training team.")
+				send_safe_mail(:to => u.email, :subject => r.title, :html_body => "<p>Hi #{u.display_name.html_safe},</p><p>Just a quick reminder... Don't forget about this event, planned the #{ApplicationHelper.datetime_to_s(r.time)}:</p><h4>#{r.title}</h4><p>#{r.description}</p>Yours truly,<br>The BeOI Training team.")
 			end
 			r.update(reminded: true)
 		end
@@ -153,6 +153,14 @@ class ApplicationController < ActionController::Base
 			if @current_user.admin != true
 				show_error("You are not allowed to do that.")
 				redirect_to "/"
+			end
+		end
+
+		def send_safe_mail(options = {})
+			begin
+				Pony.mail(options)
+			rescue Net::SMTPFatalError => error
+				puts "Net::SMTPFatalError caught in ApplicationController::send_safe_mail. Error: #{error}. Options: #{options.to_s}"
 			end
 		end
 end
