@@ -27,8 +27,8 @@ $(function()
 			<% end %>
 		</span>
 	</div>
-	<div class="panel-body">
-		<table class="table">
+	<div class="panel-body" style="overflow: auto;">
+		<table class="table problemsets-table">
 			<% (if !@current_user or !@current_user.admin? then Problemset.where(visible: true) else Problemset.all end).sort_by{|ps| -ps.created_at.to_i}.each do |ps| %>
 				<thead <% if !ps.visible %>class=""<% end %>>
 					<tr>

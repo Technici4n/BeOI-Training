@@ -1,7 +1,7 @@
 @import "bootstrap-sprockets"
 @import "bootstrap"
 
-/* 
+/*
  *	Colors
  */
 .green
@@ -17,11 +17,11 @@ a
 body
 	background-color: #CBE5F8
 	padding-top: 70px // To avoid having the navbar overriding other content
-	
+
 .spoiler-btn
 	padding: 7px
 	margin: 5px
-	
+
 .spoiler
 	visibility: hidden
 	position: absolute
@@ -30,7 +30,7 @@ body
 	border-color: #999999
 	padding: 2px
 	background-color: #E7E7E7
-	
+
 pre.prettyprint
 	width: auto
 	overflow: auto
@@ -38,13 +38,13 @@ pre.prettyprint
 	width: inherit
 	max-width: 600
 	white-space: pre-wrap
-	
+
 thead
 	background-color: #0095b6
 
 td.right
 	float: right
-	
+
 .panel-heading
 	color: #235064
 
@@ -56,10 +56,10 @@ td.right
 .user-displayname
 	font-weight: bold
 	color: #386173
-	
+
 .form-label
 	font-weight: bold
-	
+
 .subjects-table
 	width: 100%
 	tbody
@@ -73,18 +73,18 @@ td.right
 				.new-message
 					@extend .glyphicon
 					@extend .glyphicon-hand-right
-				
+
 			td:nth-of-type(2)
 				width: 62%
 				margin-right: 2%
 				padding-left: 10px
-		
+
 			td:nth-of-type(3)
 				width: 8%
 				margin-right: 2%
 				padding-right: 1%
 				text-align: right
-		
+
 			td:nth-of-type(4)
 				width: 20%
 				text-align: left
@@ -120,7 +120,7 @@ td.right
 			.edit-message
 				@extend .glyphicon
 				@extend .glyphicon-pencil
-				color: #444444 // Override the link's normal color
+				color: #444444 // Override the links normal color
 			.code-text-swapper
 				@extend .glyphicon
 				@extend .glyphicon-wrench
@@ -171,7 +171,7 @@ $iconRadius: 32px
 	height: $iconRadius
 	background: green
 	border-radius: $iconRadius/2
-	
+
 .icon-home
 	padding: 3px 0 0 3px
 	@extend .glyphicon
@@ -186,8 +186,13 @@ $iconRadius: 32px
 	text-decoration: underline
 .bb-s
 	text-decoration: line-through
-	
-/* 
+
+// Problemsets table
+.problemsets-table
+	th, td
+		white-space: nowrap
+
+/*
  * 	Navbar
  */
 .navbar-logo
