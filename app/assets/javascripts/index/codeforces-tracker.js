@@ -186,3 +186,5 @@ $(function()
 	// Update submissions if possible
 	setTimeout(function(){CodeforcesTracker.initialize_specific_tracker(function(){})}, 200);
 });
+
+CodeforcesTracker.initialize_problem_info();

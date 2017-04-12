@@ -30,6 +30,7 @@
 	post "/problemsets/:problemset_id/edit", to: "problemsets#create_problem"
 	delete "/problemsets/remove/:problem_id", to: "problemsets#remove_problem"
 	patch "/problemsets/:problemset_id/update", to: "problemsets#update"
+	delete "/problemsets/:problemset_id/delete", to: "problemsets#delete"
 
 	# Reminders
 	get "/reminders", to: "reminders#index"

@@ -14,7 +14,7 @@ var UvaTracker = (function()
 	var uhunt_id_request_url = uhunt_domain + "uname2uid/{0}"; // Param: username
 	var uhunt_user_submissions_url = uhunt_domain + "subs-user/{0}"; // Param: user ID
 	var uhunt_all_problems_url = uhunt_domain + "p";
-	
+
 	var uva_problem_url = "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}&category=";
 
 	// HTML tags IDs
@@ -29,13 +29,13 @@ var UvaTracker = (function()
 	var problem_info_by_id; // Num -> ID
 
 	// Users: {..., id: [uva ID, uva username, displayname, is_current, ...], ...}
-	
+
 	// Problems solved by user id.
 	// {..., id: {problem_id1: 0 (for tried), problem_id2: 1 (for accepted), problem_id3: 1 (for accepted), ...}, ...}
 	var problems_by_user;
 
 	/* HELPER FUNCTIONS */
-	
+
 	// Fetch single user ID
 	function send_id_request(ruby_user_id)
 	{
@@ -45,7 +45,7 @@ var UvaTracker = (function()
 				users[ruby_user_id][0] = data;
 		});
 	}
-	
+
 	// Fetch single user submission
 	function send_submission_request(ruby_user_id)
 	{
@@ -59,7 +59,7 @@ var UvaTracker = (function()
 			}
 		});
 	}
-	
+
 	var ret = // Why is this even necessary ?????
 	{
 		// Fetch all submissions from all users
@@ -70,7 +70,7 @@ var UvaTracker = (function()
 			next_submission = 0;
 			problem_info = {};
 			problem_info_by_id = {};
-			
+
 			// 1. Get all UVa IDs
 			var id_requests = [];
 			for(var id in users)
@@ -78,7 +78,7 @@ var UvaTracker = (function()
 				if(users[id][1] && users[id][1] != "")
 					id_requests.push(send_id_request(id));
 			}
-			
+
 			var submissions_requests = [];
 			// Add the problem info request
 			submissions_requests.push($.getJSON(uhunt_all_problems_url, function(data)
@@ -98,7 +98,7 @@ var UvaTracker = (function()
 					var user = users[id];
 					submissions_requests.push(send_submission_request(id));
 				}
-				
+
 				// 3. Sort submissions by submit time and call the callback function
 				$.when.apply($, submissions_requests).done(function()
 				{
@@ -137,7 +137,7 @@ var UvaTracker = (function()
 			if(contestants_only === "undefined")
 				contestants_only = false;
 			var mintime = $.now()/1000 - days*3600*24;
-			
+
 			// 1. Get all unique AC submissions for each user
 			var ac_submissions = {};
 			for(var i = 0; i < submissions.length && submissions[i][5] > mintime; ++i)
@@ -152,7 +152,7 @@ var UvaTracker = (function()
 					ac_submissions[s[0]][s[1]] = 1;
 				}
 			}
-			
+
 			// 2. Count the AC submissions for each user, and then sort
 			var counts = [];
 			for(var key in ac_submissions)
@@ -164,7 +164,7 @@ var UvaTracker = (function()
 			{
 				return b[1] - a[1];
 			});
-			
+
 			// 3. Create the chart
 			new Chartkick.PieChart("chart-1", counts,
 			{
@@ -195,9 +195,9 @@ var UvaTracker = (function()
 					},
 					legend:
 					{
-						layout: "vertical", // Legend to top-left
+						layout: "vertical",
 						align: "left",
-						verticalAlign: "top",
+						verticalAlign: (window.mobilecheck() ? "bottom" : "top"),
 						floating: true,
 						useHTML: true, // Allow HTML in legend
 						labelFormatter: function() // Change label format
@@ -221,7 +221,7 @@ var UvaTracker = (function()
 				if(!(user in problems_by_user))
 					problems_by_user[user] = {};
 				var user_problems = problems_by_user[user];
-				
+
 				// Check for result
 				if(verdict == 90) // Accepted
 				{
@@ -299,14 +299,14 @@ var UvaTracker = (function()
 			return uva_problem_url;
 		}
 	};
-	
+
 	return ret;
 })();
 
 /* Some helper functions */
 var UvaUtil = (function()
 {
-	var ret = 
+	var ret =
 	{
 		// Returns the runtime format for the tracker
 		get_runtime_format: function(runtime)

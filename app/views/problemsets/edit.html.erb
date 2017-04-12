@@ -11,7 +11,7 @@
 					<th>Problems</th>
 					<th>Visible</th>
 					<th>Created</th>
-					<th>Actions</th>
+					<th colspan="2">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -22,24 +22,25 @@
 						<td><%= if ps.visible then "Yes" else "No" end %></td>
 						<td>The <%= ApplicationHelper.datetime_to_s(ps.created_at) %></td>
 						<td><a href="/problemsets/<%= ps.id %>/edit">Edit</a></td>
+						<td><%= link_to "Remove", "/problemsets/#{ps.id}/delete", method: :delete, data: {confirm: "Are you sure you want to delete this problemset ? This action can't be undone !"} %>
 					</tr>
 				<% end %>
 			</tbody>
 		</table>
 		<%= form_for :problemset, url: "/problemsets/edit" do |f|%>
-			
+
 			<div class="form-group">
 				<%= ApplicationHelper.f_label "New Problemset" %>
 				<%= f.text_field :title, placeholder: "Title", class: "form-control", style: "width: 500px;" %>
 			</div>
-			
+
 			<div class="checkbox">
 				<%= f.check_box :visible, {:checked => true} %>
 				Visible
 			</div>
-			
+
 			<%= f.submit :style => "margin-bottom: 40px;", :class => "btn btn-primary" %>
-			
+
 		<% end %>
 	</div>
 </div>

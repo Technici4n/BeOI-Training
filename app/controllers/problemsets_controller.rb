@@ -32,6 +32,12 @@ class ProblemsetsController < ApplicationController
 		redirect_to "/problemsets/#{params[:problemset_id]}/edit"
 	end
 
+	def delete
+		@problemset = Problemset.find(params[:problemset_id])
+		@problemset.destroy
+		redirect_to "/problemsets/edit"
+	end
+
 	def edit_specific
 		@problemset = Problemset.find(params[:problemset_id])
 	end
