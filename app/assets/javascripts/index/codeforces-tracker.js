@@ -187,4 +187,4 @@ $(function()
 	setTimeout(function(){CodeforcesTracker.initialize_specific_tracker(function(){})}, 200);
 });
 
-CodeforcesTracker.initialize_problem_info();
+CodeforcesTracker.initialize_problem_info(function(){});
