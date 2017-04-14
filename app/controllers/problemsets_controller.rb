@@ -5,7 +5,12 @@ class ProblemsetsController < ApplicationController
 	before_action :admin_check, :only => [:edit, :create, :update, :edit_specific, :create_problem, :remove_problem]
 
 	def index
-		@users = User.where(is_contestant: true)
+		if !params[:users]
+			@users = User.where(is_contestant: true)
+		else
+			ids = params[:users].split(",").map{|id| id.to_i}
+			@users = User.where(id: ids)
+		end
 		@problemsets = Problemset.includes(:problems).where(visible: true)
 	end
 
