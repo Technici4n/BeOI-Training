@@ -12,11 +12,11 @@ class User < ApplicationRecord
 
 	attr_accessor :password
 	attr_accessor :password_confirmation
-	
+
 	EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
-	UVA_USERNAME_REGEX = /\A[A-Z0-9_]{3,}\z/i
-	CODEFORCES_USERNAME_REGEX = /\A[A-Z0-9_]{3,24}\z/i
-	
+	UVA_USERNAME_REGEX = /\A[\p{L}\p{N}]{3,}\z/i
+	CODEFORCES_USERNAME_REGEX = /\A[\p{L}\p{N}_]{3,24}\z/i
+
 	validates :username, :presence => true, :uniqueness => true, :length => { :in => 3..40 }
 	validates :uva, :uniqueness => true, :format => UVA_USERNAME_REGEX, :allow_blank => true
 	validates :codeforces, :uniqueness => true, :format => CODEFORCES_USERNAME_REGEX, :allow_blank => true
@@ -25,13 +25,13 @@ class User < ApplicationRecord
 	validates :initials, :length => { :in => 2..6 }, :uniqueness => true, :allow_blank => true
 	validates :password, :length => { :minimum => 6}, :confirmation => true, :on => :create
 	validates :password_confirmation, presence: true, :on => :create
-	
+
 	def encrypt_password
 		if password.present?
 			self.salt = Digest::SHA1.hexdigest("Let us add #{email} as unchanging value and #{Time.now} as changing value :)")
 			self.hashed_password = Digest::SHA1.hexdigest("To encrypt, just add the #{salt} to the #{password}")
 		end
-		
+
 		if self.admin == nil
 			self.admin = false
 		end
