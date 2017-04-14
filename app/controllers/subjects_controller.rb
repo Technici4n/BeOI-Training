@@ -11,7 +11,7 @@ class SubjectsController < ApplicationController
 	def index
 		# Pagination
 		params[:page] ||= 1
-		@subjects = Subject.order(pinned: :desc, last_message_time: :desc).paginate(:page => params[:page])
+		@subjects = Subject.includes(forum_messages: :user).order(pinned: :desc, last_message_time: :desc).paginate(:page => params[:page])
 	end
 
 	def show
@@ -22,7 +22,7 @@ class SubjectsController < ApplicationController
 		# Pagination
 		params[:page] ||= 1
 		params[:page] = @subject.forum_messages.count.zero? ? 1 : (@subject.forum_messages.count / ForumMessage.per_page.to_f).ceil if params[:page] == 'last'
-		@messages = @subject.forum_messages.order(:created_at).paginate(:page => params[:page])
+		@messages = @subject.forum_messages.includes(:user).order(:created_at).paginate(:page => params[:page])
 	end
 
 	def new

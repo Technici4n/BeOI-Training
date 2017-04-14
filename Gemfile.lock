@@ -41,12 +41,14 @@ GEM
     arel (7.1.1)
     autoprefixer-rails (6.4.0.2)
       execjs
-    bb-ruby (1.2.2)
     bootstrap-sass (3.2.0.2)
       sass (~> 3.2)
     bootstrap-will_paginate (0.0.10)
       will_paginate
     builder (3.2.2)
+    bullet (5.5.1)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.10.0)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.2.x)
@@ -138,6 +140,7 @@ GEM
       tzinfo (>= 1.0.0)
     uglifier (3.0.2)
       execjs (>= 0.3.0, < 3)
+    uniform_notifier (1.10.0)
     web-console (3.3.1)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -153,9 +156,9 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
-  bb-ruby
   bootstrap-sass (~> 3.2.0)
   bootstrap-will_paginate
+  bullet
   byebug
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)

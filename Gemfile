@@ -7,9 +7,6 @@ gem 'bootstrap-will_paginate'
 # Mailer
 gem 'pony'
 
-# BBCode support
-gem 'bb-ruby'
-
 # Bootstrap support
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
@@ -49,6 +46,8 @@ end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
+  # SQL "debugger"
+  gem 'bullet'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

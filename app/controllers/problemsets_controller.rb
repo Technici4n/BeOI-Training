@@ -6,6 +6,7 @@ class ProblemsetsController < ApplicationController
 
 	def index
 		@users = User.where(is_contestant: true)
+		@problemsets = Problemset.includes(:problems).where(visible: true)
 	end
 
 	def edit
@@ -22,6 +23,7 @@ class ProblemsetsController < ApplicationController
 			@problemset.errors.full_messages.each do |m|
 				show_error(m)
 			end
+			@problemsets = Problemset.all
 			render "edit"
 		end
 	end
