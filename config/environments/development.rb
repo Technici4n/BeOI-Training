@@ -56,10 +56,6 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
-
-    Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Subject", :association => :chapter
-    Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Subject", :association => :section
-    Bullet.add_whitelist :type => :unused_eager_loading, :class_name => "Subject", :association => :exercise
   end if enable_sql_debugging
 
 end
