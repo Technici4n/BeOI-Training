@@ -25,6 +25,8 @@ var PageUtil =
 	// Escape html special chars
 	h: function(text)
 	{
+		if(!text)
+			return '';
 		// Escape special chars
 		var HTML_ESCAPE_ONCE_REGEXP = /["><']|&(?!([a-zA-Z]+|(#\d+)|(#[xX][\dA-Fa-f]+));)/g;
 		var HTML_ESCAPE = { '&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', "'": '&#39;' };
