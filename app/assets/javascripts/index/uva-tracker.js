@@ -199,7 +199,6 @@ var UvaTracker = (function()
 						align: "left",
 						verticalAlign: (window.mobilecheck() ? "bottom" : "top"),
 						floating: true,
-						useHTML: true, // Allow HTML in legend
 						labelFormatter: function() // Change label format
 						{
 							return "{1} ({0})".f(this.y, this.name);
