@@ -14,6 +14,7 @@ var UvaTracker = (function()
 	var uhunt_id_request_url = uhunt_domain + "uname2uid/{0}"; // Param: username
 	var uhunt_user_submissions_url = uhunt_domain + "subs-user/{0}"; // Param: user ID
 	var uhunt_all_problems_url = uhunt_domain + "p";
+	var uhunt_poll_event_url = uhunt_domain + "poll/{0}";
 
 	var uva_problem_url = "https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem={0}&category=";
 
@@ -21,7 +22,9 @@ var UvaTracker = (function()
 	var html_id_last_submissions_table = "#lastsubmissions";
 
 	// All the submissions, to be appended 20 by 20
-	var submissions; // = [..., [ruby_user_id, problem ID, verdict ID, language ID, runtime, submit time], ...]
+	var submissions; // = [..., [ruby_user_id, problem ID, verdict ID, language ID, runtime, submit time, submission ID], ...]
+	// Later submissions, by polling uHunt.
+	var later_submissions;
 	// Last appended submission ID
 	var next_submission;
 	// Problem info, to convert from problem id to problem number
@@ -29,47 +32,137 @@ var UvaTracker = (function()
 	var problem_info_by_id; // Num -> ID
 
 	// Users: {..., id: [uva ID, uva username, displayname, is_current, ...], ...}
+	// => provided by Ruby
+
+	// user_ids: uva id -> ruby id
+	var uva_to_ruby_id;
 
 	// Problems solved by user id.
 	// {..., id: {problem_id1: 0 (for tried), problem_id2: 1 (for accepted), problem_id3: 1 (for accepted), ...}, ...}
 	var problems_by_user;
-
 	/* HELPER FUNCTIONS */
 
 	// Fetch single user ID
-	function send_id_request(ruby_user_id)
-	{
-		return $.getJSON(uhunt_id_request_url.f(users[ruby_user_id][1]), function(data)
-		{
-			if(data != 0)
+	function send_id_request(ruby_user_id) {
+		return $.getJSON(uhunt_id_request_url.f(users[ruby_user_id][1]), function(data) {
+			if(data != 0) {
 				users[ruby_user_id][0] = data;
-		});
-	}
-
-	// Fetch single user submission
-	function send_submission_request(ruby_user_id)
-	{
-		var user = users[ruby_user_id];
-		return $.getJSON(uhunt_user_submissions_url.f(user[0]), function(data)
-		{
-			for(var i = 0; i < data["subs"].length; ++i)
-			{
-				var sub = data["subs"][i];
-				submissions.push([ruby_user_id, sub[1], sub[2], sub[5], sub[3], sub[4]]);
+				uva_to_ruby_id[data] = ruby_user_id;
 			}
 		});
 	}
 
-	var ret = // Why is this even necessary ?????
-	{
+	// Fetch single user submission
+	function send_submission_request(ruby_user_id) {
+		var user = users[ruby_user_id];
+		return $.getJSON(uhunt_user_submissions_url.f(user[0]), function(data) {
+			for(var i = 0; i < data["subs"].length; ++i) {
+				var sub = data["subs"][i];
+				submissions.push([ruby_user_id, sub[1], sub[2], sub[5], sub[3], sub[4], sub[0]]);
+			}
+		});
+	}
+
+	var prev_poll;
+
+	// Done polling new events from uHunt
+	function done_polling(data) {
+		var nextid = prev_poll;
+		if(data) {
+			for(var i = 0; i < data.length; ++i) {
+				var ev = data[i];
+				nextid = ev["id"];
+				var ev = ev["msg"];
+				// If the user is on the website, update the table and add
+				if(ev["uid"] in uva_to_ruby_id) {
+					const s = [uva_to_ruby_id[ev["uid"]], ev["pid"], ev["ver"], ev["lan"], ev["run"], ev["sbt"], ev["sid"]];
+					add_submission_to_table(s);
+					later_submissions.push(s);
+				}
+			}
+		}
+		prev_poll = nextid;
+		$.getJSON(uhunt_poll_event_url.f(nextid), done_polling);
+	}
+
+	function start_polling() {
+		done_polling(undefined);
+	}
+
+	// Add a submission to the "last submissions" table
+	function add_submission_to_table(s) {
+		$(html_id_last_submissions_table).children().each(function(id) {
+			var $el = $(this);
+			if($el.attr('data-sid') == s[6]) {
+				$el.replaceWith(format_submission(s));
+				return false;
+			}
+			if(parseInt($el.attr('data-sid')) < parseInt(s[6] )) {
+				$el.before(format_submission(s));
+				return false;
+			}
+		});
+	}
+
+	// Format a submission for insertion in the "last submissions" table
+	function format_submission(s) {
+		var preformat = "", postformat = "", rowformat = "";
+		if(users[s[0]][3] == true) {
+			preformat = "<strong>";
+			postformat = "</strong>";
+			rowformat = UvaUtil.get_table_row_format(s[2]);
+		}
+		return '<tr{0} data-sid="{9}"><td>{1}{3}{2}</td><td>{1}{4}{2}</td><td>{1}{5}{2}</td><td>{1}{6}{2}</td><td>{1}{7}{2}</td><td>{1}{8}{2}</td></tr>'.f(
+				rowformat, preformat, postformat, users[s[0]][2], UvaUtil.get_problem_format(s[1]), UvaUtil.get_verdict_format(s[2]),
+				UvaUtil.get_lang_format(s[3]), UvaUtil.get_runtime_format(s[4]), timestamp_to_string(s[5]), s[6]);
+	}
+
+	function refresh_topsolvers_graph(counts) {
+		new Chartkick.PieChart("chart-1", counts, {
+			library: {
+				title: {
+				   text: "<strong>Accepted submissons over the past two weeks</strong>", // Set title
+				   useHTML: true // Allow HTML in title
+				},
+				plotOptions: {
+					pie: {
+						showInLegend: true // Show legend
+					}
+				},
+				tooltip: {
+					formatter: function() { // Change tooltip format
+						if(this.y > 1) {
+							return "<b>{0} Accepted submissions</b>".f(this.y);
+						}
+						else {
+							return "<b>1 Accepted submission</b>";
+						}
+					},
+					useHTML: true // Allow HTML in tooltip
+				},
+				legend: {
+					layout: "vertical",
+					align: "left",
+					verticalAlign: (window.mobilecheck() ? "bottom" : "top"),
+					floating: true,
+					labelFormatter: function() { // Change label format
+						return "{1} ({0})".f(this.y, this.name);
+					}
+				}
+			}
+		});
+	}
+
+	return {
 		// Fetch all submissions from all users
-		last_submissions: function(callback)
-		{
+		last_submissions: function(callback) {
 			// 0. Init all vars
 			submissions = [];
+			later_submissions = [];
 			next_submission = 0;
 			problem_info = {};
 			problem_info_by_id = {};
+			uva_to_ruby_id = {};
 
 			// 1. Get all UVa IDs
 			var id_requests = [];
@@ -108,49 +201,41 @@ var UvaTracker = (function()
 						var timeb = b[5];
 						return ((timea < timeb) ? 1 : ((timeb < timea) ? -1 : 0));
 					});
+					start_polling();
 					callback();
 				});
 			});
 		},
 		// Add <count> submissions at the end of the "Last submissions" table
-		append_submissions: function(count)
-		{
+		append_submissions: function(count) {
 			var end = next_submission + count;
-			for(; next_submission < end && next_submission < submissions.length; ++next_submission)
-			{
+			for(; next_submission < end && next_submission < submissions.length; ++next_submission) {
 				var s = submissions[next_submission];
-				var preformat = "", postformat = "", rowformat = "";
-				if(users[s[0]][3] == true)
-				{
-					preformat = "<strong>";
-					postformat = "</strong>";
-					rowformat = UvaUtil.get_table_row_format(s[2]);
-				}
-				$(html_id_last_submissions_table).append('<tr{0}><td>{1}{3}{2}</td><td>{1}{4}{2}</td><td>{1}{5}{2}</td><td>{1}{6}{2}</td><td>{1}{7}{2}</td><td>{1}{8}{2}</td></tr>'.f(
-															rowformat, preformat, postformat, users[s[0]][2], UvaUtil.get_problem_format(s[1]), UvaUtil.get_verdict_format(s[2]),
-															UvaUtil.get_lang_format(s[3]), UvaUtil.get_runtime_format(s[4]), timestamp_to_string(s[5])));
+				$(html_id_last_submissions_table).append(format_submission(s));
 			}
 		},
 		// Show the top solvers graph. param: <contestants_only>: if true, it will only take the users marked as "contestant" into account.
-		top_solvers: function(days, contestants_only)
-		{
+		top_solvers: function(days, contestants_only) {
 			if(contestants_only === "undefined")
 				contestants_only = false;
 			var mintime = $.now()/1000 - days*3600*24;
 
 			// 1. Get all unique AC submissions for each user
 			var ac_submissions = {};
-			for(var i = 0; i < submissions.length && submissions[i][5] > mintime; ++i)
-			{
-				var s = submissions[i];
-				if(s[2] == 90)
-				{
-					if(!(s[0] in ac_submissions))
-					{
+			// Helper function
+			let add_submission = function(s) {
+				if(s[2] == 90) {
+					if(!(s[0] in ac_submissions)) {
 						ac_submissions[s[0]] = {};
 					}
 					ac_submissions[s[0]][s[1]] = 1;
 				}
+			}
+			for(var i = 0; i < submissions.length && submissions[i][5] > mintime; ++i) {
+				add_submission(submissions[i]);
+			}
+			for(var i = later_submissions.length-1; i >= 0 && later_submissions[i][5] > mintime; --i) {
+				add_submission(later_submissions[i]);
 			}
 
 			// 2. Count the AC submissions for each user, and then sort
@@ -160,52 +245,12 @@ var UvaTracker = (function()
 				if(!contestants_only || users[key][4] == true)
 					counts.push([users[key][2], Object.keys(ac_submissions[key]).length]);
 			}
-			counts.sort(function(a, b)
-			{
+			counts.sort(function(a, b) {
 				return b[1] - a[1];
 			});
 
 			// 3. Create the chart
-			new Chartkick.PieChart("chart-1", counts,
-			{
-				library:
-				{
-					title:
-					{
-					   text: "<strong>Accepted submissons over the past two weeks</strong>", // Set title
-					   useHTML: true // Allow HTML in title
-					},
-					plotOptions:
-					{
-						pie:
-						{
-							showInLegend: true // Show legend
-						}
-					},
-					tooltip:
-					{
-						formatter: function() // Change tooltip format
-						{
-							if(this.y > 1)
-								return "<b>{0} Accepted submissions</b>".f(this.y);
-							else
-								return "<b>1 Accepted submission</b>";
-						},
-						useHTML: true // Allow HTML in tooltip
-					},
-					legend:
-					{
-						layout: "vertical",
-						align: "left",
-						verticalAlign: (window.mobilecheck() ? "bottom" : "top"),
-						floating: true,
-						labelFormatter: function() // Change label format
-						{
-							return "{1} ({0})".f(this.y, this.name);
-						}
-					}
-				}
-			});
+			refresh_topsolvers_graph(counts);
 		},
 		// Collects all the submissions, by user ID
 		initialize_specific_tracker: function()
@@ -298,8 +343,6 @@ var UvaTracker = (function()
 			return uva_problem_url;
 		}
 	};
-
-	return ret;
 })();
 
 /* Some helper functions */

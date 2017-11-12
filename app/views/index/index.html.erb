@@ -19,14 +19,12 @@
 	</div>
 	<div class="panel-body">
 		<center>
-			<div class="btn-group" data-toggle="buttons">
-				<label class="btn btn-default active" id="option1">
-					<input type="radio" name="options" autocomplete="off" checked> All
-				</label>
-				<label class="btn btn-default" id="option2">
-					<input type="radio" name="options" autocomplete="off"> Contestants only
-				</label>
-			</div>
+			<button class="btn btn-default" onclick="UvaTracker.top_solvers(14, false);">
+				Refresh all
+			</button>
+			<button class="btn btn-default" onclick="UvaTracker.top_solvers(14, true);">
+				Contestants only
+			</button>
 		</center>
 		<div id="chart-1" style="height: 400px;">
 		</div>
