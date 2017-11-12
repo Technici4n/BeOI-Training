@@ -223,7 +223,7 @@ var UvaTracker = (function()
 			// 1. Get all unique AC submissions for each user
 			var ac_submissions = {};
 			// Helper function
-			let add_submission = function(s) {
+			var add_submission = function(s) {
 				if(s[2] == 90) {
 					if(!(s[0] in ac_submissions)) {
 						ac_submissions[s[0]] = {};
