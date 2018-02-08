@@ -85,7 +85,7 @@ GEM
     nokogiri (1.6.8-x86-mingw32)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
-    pg (0.18.4-x86-mingw32)
+    pg (0.21.0-x86-mingw32)
     pkg-config (1.1.7)
     pony (1.11)
       mail (>= 2.0)
@@ -163,7 +163,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
   jquery-rails
-  pg
+  pg (~> 0.20)
   pony
   puma (~> 3.0)
   rails (~> 5.0.0, >= 5.0.0.1)
