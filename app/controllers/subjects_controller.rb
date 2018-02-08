@@ -99,6 +99,7 @@ class SubjectsController < ApplicationController
 			@message.save
 			@subject.update(forum_messages: (@subject.forum_messages << @message), last_message_time: @message.created_at)
 
+			#TODO: send personal slack notification to followers
 			update_unread_subjects
 			# Send mail to followers
 			@subject.following_users.each do |u|
@@ -179,10 +180,15 @@ class SubjectsController < ApplicationController
 		end
 
 		def broadcast_subject_creation(subject)
-			User.where(should_notify_new_subjects: true).each do |u|
-				if u.id != @current_user.id
-					send_safe_mail(:to => u.email, :subject => "BeOI-Training: New subject: \"#{subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{subject.forum_messages[0].user.display_name.html_safe} created a new subject on the forum: #{view_context.link_to subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{subject.id}"}. Make sure you check it out !<br><br>If you don't want to be notified for new subjects anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/stop_following_forum", method: :patch}.<br><br>Yours truly,<br>The BeOI Training team.")
-				end
-			end
+			uri = URI(ENV['SLACK_WEBHOOK_URL'])
+			http = Net::HTTP.new(uri.hostname, uri.port)
+			http.use_ssl = true
+			post = Net::HTTP::Post.new(uri.path)
+			clean_title = subject.title.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('"', '\\"')
+			post.body = "{\"text\": \"New subject: <#{ENV['APP_URL']}/subjects/#{subject.id}|#{clean_title}>\"}"
+			#TODO: Add a short extract from the description as attachment
+			#TODO: add the poster as field (and possibly link him to his slack name?)
+			post['Content-Type'] = 'application/json'
+			http.request(post)
 		end
 end
