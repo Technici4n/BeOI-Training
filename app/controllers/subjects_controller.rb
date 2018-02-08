@@ -179,13 +179,17 @@ class SubjectsController < ApplicationController
 			end
 		end
 
+		def escape_string(s)
+			s.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('"', '\\"')
+		end
+
 		def broadcast_subject_creation(subject)
 			uri = URI(ENV['SLACK_WEBHOOK_URL'])
 			http = Net::HTTP.new(uri.hostname, uri.port)
 			http.use_ssl = true
 			post = Net::HTTP::Post.new(uri.path)
-			clean_title = subject.title.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('"', '\\"')
-			post.body = "{\"text\": \"New subject: <#{ENV['APP_URL']}/subjects/#{subject.id}|#{clean_title}>\"}"
+			clean_title = escape_string(subject.title)
+			post.body = "{\"text\": \"_#{escape_string(subject.forum_messages.first.user.display_name)}_ just posted a new subject on the forum: _#{clean_title}_. Be sure to <#{ENV['APP_URL']}/subjects/#{subject.id}|check it out>!\"}"
 			#TODO: Add a short extract from the description as attachment
 			#TODO: add the poster as field (and possibly link him to his slack name?)
 			post['Content-Type'] = 'application/json'
