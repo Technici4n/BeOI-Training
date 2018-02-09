@@ -102,9 +102,8 @@ class SubjectsController < ApplicationController
 			update_unread_subjects
 			# Send mail to followers
 			@subject.following_users.each do |u|
-				if u != @current_user
-					#TODO: Get the slack username and use @username as channel in this call
-					# send_notification(@subject, @message, nil)
+				if u != @current_user and u.slack
+					send_notification(@subject, @message, "@#{u.slack}")
 				end
 			end
 			redirect_to "/subjects/#{@subject.id}?page=last"

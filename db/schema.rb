@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170131210340) do
+ActiveRecord::Schema.define(version: 20180209142112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 20170131210340) do
     t.string   "codeforces"
     t.string   "initials"
     t.boolean  "should_notify_new_subjects"
+    t.string   "slack",                      limit: 21
   end
 
 end

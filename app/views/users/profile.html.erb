@@ -16,6 +16,11 @@
 		</div>
 
 		<div class="form-group">
+			<%= ApplicationHelper.f_label t(:slack) %><br>
+			<%= f.text_field :slack, class: "form-control", placeholder: t(:slack) %>
+		</div>
+
+		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:display_name) %><br>
 			<%= f.text_field :display_name, class: "form-control", placeholder: t(:display_name) %>
 			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>

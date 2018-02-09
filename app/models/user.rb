@@ -16,10 +16,12 @@ class User < ApplicationRecord
 	EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
 	UVA_USERNAME_REGEX = /\A[\p{L}\p{N}_]{3,}\z/i
 	CODEFORCES_USERNAME_REGEX = /\A[\p{L}\p{N}_]{3,24}\z/i
+	SLACK_USERNAME_REGEX = /\A[a-z0-9._-]{1,21}\z/i
 
 	validates :username, :presence => true, :uniqueness => true, :length => { :in => 3..40 }
 	validates :uva, :uniqueness => true, :format => UVA_USERNAME_REGEX, :allow_blank => true
 	validates :codeforces, :uniqueness => true, :format => CODEFORCES_USERNAME_REGEX, :allow_blank => true
+	validates :slack, :uniqueness => true, :format => SLACK_USERNAME_REGEX, :allow_blank => true
 	validates :email, :presence => true, :uniqueness => true, :format => EMAIL_REGEX
 	validates :display_name, :length => { :in => 3..40 }, :uniqueness => true
 	validates :initials, :length => { :in => 2..6 }, :uniqueness => true, :allow_blank => true
