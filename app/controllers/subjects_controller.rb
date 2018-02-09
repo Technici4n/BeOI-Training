@@ -99,12 +99,12 @@ class SubjectsController < ApplicationController
 			@message.save
 			@subject.update(forum_messages: (@subject.forum_messages << @message), last_message_time: @message.created_at)
 
-			#TODO: send personal slack notification to followers
 			update_unread_subjects
 			# Send mail to followers
 			@subject.following_users.each do |u|
 				if u != @current_user
-					send_safe_mail(:to => u.email, :subject => "BeOI-Training: New message in followed subject \"#{@subject.title.html_safe}\"", :html_body => "Hello #{u.display_name.html_safe},<br><br>#{@current_user.display_name.html_safe} posted a new message in a subject that you follow, #{view_context.link_to @subject.title.html_safe, "#{ENV['APP_URL']}/subjects/#{@subject.id}"}. You can read that message #{view_context.link_to "here", "#{ENV['APP_URL']}/subjects/#{@subject.id}"}.<br><br>If you don't want to follow this subject anymore, please click on #{view_context.link_to "this link", "#{ENV['APP_URL']}/subjects/#{@subject.id}", method: :delete}.<br><br>Yours truly,<br>The BeOI Training team.")
+					#TODO: Get the slack username and use @username as channel in this call
+					# send_notification(@subject, @message, nil)
 				end
 			end
 			redirect_to "/subjects/#{@subject.id}?page=last"
@@ -180,19 +180,48 @@ class SubjectsController < ApplicationController
 		end
 
 		def escape_string(s)
-			s.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('"', '\\"')
+			#Great fun with backslashes: https://www.ruby-forum.com/topic/143645
+			s.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('\\', '\\\\\\\\').gsub('"', '\\"')
 		end
 
-		def broadcast_subject_creation(subject)
+		def send_notification(subject, message, channel)
 			uri = URI(ENV['SLACK_WEBHOOK_URL'])
 			http = Net::HTTP.new(uri.hostname, uri.port)
 			http.use_ssl = true
 			post = Net::HTTP::Post.new(uri.path)
-			clean_title = escape_string(subject.title)
-			post.body = "{\"text\": \"_#{escape_string(subject.forum_messages.first.user.display_name)}_ just posted a new subject on the forum: _#{clean_title}_. Be sure to <#{ENV['APP_URL']}/subjects/#{subject.id}|check it out>!\"}"
-			#TODO: Add a short extract from the description as attachment
-			#TODO: add the poster as field (and possibly link him to his slack name?)
+
+			attachment_text = message.text.gsub(/\s+/, " ")
+			if attachment_text.length > 50 then
+				attachment_text = attachment_text[0..49] + "…"
+			end
+
+			title = subject.title
+			color = "good"
+			if subject.forum_messages.length > 1 then
+				color = "#428BCA"
+				title = "_Reply to:_ #{title}"
+			end
+
+
+			post.body = <<-BODY.gsub(/\s+/, " ")
+				{"attachments": [
+					{
+						"title": "#{escape_string(title)}",
+						"title_link": "#{ENV['APP_URL']}/subjects/#{subject.id}",
+						"text": "#{escape_string(attachment_text)}",
+						"author_name": "#{escape_string(message.user.display_name)}",
+						"color": "#{color}"
+						#{if channel != nil then
+							", \"channel\": \"#{escape_string(channel)}\""
+						end}
+					}
+				]}
+			BODY
 			post['Content-Type'] = 'application/json'
 			http.request(post)
+		end
+
+		def broadcast_subject_creation(subject)
+			send_notification(subject, subject.forum_messages.first, nil)
 		end
 end
