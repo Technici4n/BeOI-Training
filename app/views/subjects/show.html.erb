@@ -20,7 +20,7 @@
 					<% if @subject.following_users.exists?(@current_user.id) %>
 						<%= link_to "Stop following this subject", "/subjects/#{@subject.id}/stop_following", method: :delete, class: "btn btn-default btn-gray" %>
 					<% else %>
-						<%= link_to "Follow this subject", "/subjects/#{@subject.id}/start_following", method: :put, data: {confirm: "You will receive a mail for every message posted in this subject."}, class: "btn btn-default btn-gray" %>
+						<%= link_to "Follow this subject", "/subjects/#{@subject.id}/start_following", method: :put, data: {confirm: "You will receive a private slack message for every message posted in this subject."}, class: "btn btn-default btn-gray" %>
 					<% end %>
 				<% end %>
 				<!-- Remove subject (only if admin) -->
