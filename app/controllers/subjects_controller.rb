@@ -1,5 +1,5 @@
 class SubjectsController < ApplicationController
-	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned, :start_following_subject, :stop_following_subject, :start_following_forum, :stop_following_forum]
+	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned, :start_following_subject, :stop_following_subject]
 	before_action only: [:index, :show] do
 		authenticate_user(false)
 	end
@@ -131,16 +131,6 @@ class SubjectsController < ApplicationController
 			@subject.following_users.delete(@current_user)
 		end
 		redirect_to "/subjects/#{@subject.id}"
-	end
-
-	def start_following_forum
-		@current_user.update(should_notify_new_subjects: true)
-		redirect_to "/subjects"
-	end
-
-	def stop_following_forum
-		@current_user.update(should_notify_new_subjects: false)
-		redirect_to "/subjects"
 	end
 
 	private
