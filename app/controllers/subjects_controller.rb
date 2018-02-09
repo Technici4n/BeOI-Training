@@ -1,10 +1,10 @@
 class SubjectsController < ApplicationController
-	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned, :start_following_subject, :stop_following_subject]
+	before_action :authenticate_user, :only => [:new, :create, :edit, :update, :create_message, :toggle_pinned, :start_following, :stop_following, :delete]
 	before_action only: [:index, :show] do
 		authenticate_user(false)
 	end
 	before_action :same_user_check, :only => [:edit, :update]
-	before_action :admin_check, :only => [:toggle_pinned]
+	before_action :admin_check, :only => [:toggle_pinned, :delete]
 	after_action :update_last_forum_visit
 	after_action :clear_unread_subjects_count, :only => [:index]
 
@@ -115,7 +115,7 @@ class SubjectsController < ApplicationController
 		end
 	end
 
-	def start_following_subject
+	def start_following
 		@subject = Subject.find(params[:subject_id])
 		if !@subject.following_users.exists?(@current_user.id)
 			@subject.following_users << @current_user
@@ -125,12 +125,19 @@ class SubjectsController < ApplicationController
 		redirect_to "/subjects/#{@subject.id}"
 	end
 
-	def stop_following_subject
+	def stop_following
 		@subject = Subject.find(params[:subject_id])
 		if @subject.following_users.exists?(@current_user.id)
 			@subject.following_users.delete(@current_user)
 		end
 		redirect_to "/subjects/#{@subject.id}"
+	end
+
+	def delete
+		@subject = Subject.find(params[:subject_id])
+		@subject.destroy
+		session[:success] = "Subject successfully removed."
+		redirect_to "/subjects"
 	end
 
 	private

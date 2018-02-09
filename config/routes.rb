@@ -19,8 +19,9 @@
 	get "/subjects/edit/:message_id", to: "subjects#edit"
 	patch "/subjects/edit/:message_id", to: "subjects#update"
 	patch "/subjects/:subject_id/toggle_pinned", to: "subjects#toggle_pinned"
-	put "/subjects/:subject_id/start_following", to: "subjects#start_following_subject"
-	delete "/subjects/:subject_id/stop_following", to: "subjects#stop_following_subject"
+	put "/subjects/:subject_id/start_following", to: "subjects#start_following"
+	delete "/subjects/:subject_id/stop_following", to: "subjects#stop_following"
+	delete "/subjects/:subject_id/delete", to: "subjects#delete"
 
 	# Problemsets
 	get "/problemsets", to: "problemsets#index"
