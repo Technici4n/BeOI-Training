@@ -6,13 +6,7 @@
 		<strong>Forum</strong>
 		<!-- Following (only if the user is logged in) -->
 		<div style="float: right;">
-			<% if @current_user %>
-				<% if @current_user.should_notify_new_subjects %>
-					<%= link_to "Stop following the forum", "/subjects/stop_following_forum", method: :patch, class: "btn btn-default btn-gray" %>
-				<% else %>
-					<%= link_to "Follow the forum", "/subjects/start_following_forum", method: :patch, data: {confirm: "You will receive a mail for every new subject posted on the forum."}, class: "btn btn-default btn-gray" %>
-				<% end %>
-			<% end %>
+			<div class="btn btn-default btn-gray" onclick="javascript:alert('Please join #beoi-training-forum in the be-algo slack group')">Follow the forum</div>
 		</div>
 	</div>
 	<div class="panel-body">

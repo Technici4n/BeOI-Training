@@ -76,10 +76,10 @@ class UsersController < ApplicationController
 
 	private
 		def new_user_params
-			params.require(:user).permit(:username, :uva, :codeforces, :display_name, :initials, :email, :admin, :inscription_date, :password, :password_confirmation)
+			params.require(:user).permit(:username, :uva, :codeforces, :slack, :display_name, :initials, :email, :admin, :inscription_date, :password, :password_confirmation)
 		end
 
 		def update_user_params
-			params.require(:user).permit(:uva, :codeforces, :display_name, :initials, :is_contestant, :in_event)
+			params.require(:user).permit(:uva, :codeforces, :slack, :display_name, :initials, :is_contestant, :in_event)
 		end
 end

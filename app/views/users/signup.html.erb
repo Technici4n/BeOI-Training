@@ -4,48 +4,53 @@
 	</div>
 	<div class="panel-body">
 	<%= form_for @user, url: {action: "create"} do |f| %>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:username)%><br>
 			<%= f.text_field :username, class: "form-control", style: "width: 250px;", placeholder: t(:username) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:uva)%><br>
 			<%= f.text_field :uva, class: "form-control", style: "width: 250px;", placeholder: t(:uva) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:codeforces)%><br>
 			<%= f.text_field :codeforces, class: "form-control", style: "width: 250px;", placeholder: t(:codeforces) %>
 		</div>
-		
+
+		<div class="form-group">
+			<%= ApplicationHelper.f_label t(:slack)%><br>
+			<%= f.text_field :slack, class: "form-control", style: "width: 250px;", placeholder: t(:slack) %>
+		</div>
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:display_name)%><br>
 			<%= f.text_field :display_name, class: "form-control", style: "width: 250px;", placeholder: t(:display_name) %>
 			<a style="cursor: pointer;" onclick="fetch_uva_id();">(Fetch from UVa)</a>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:initials) %><br>
 			<%= f.text_field :initials, class: "form-control", style: "width: 250px;", placeholder: t(:initials) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:email)%><br>
 			<%= f.text_field :email, class: "form-control", style: "width: 250px;", placeholder: t(:email) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:password)%><br>
 			<%= f.password_field :password, class: "form-control", style: "width: 250px;", placeholder: t(:password) %>
 		</div>
-		
+
 		<div class="form-group">
 			<%= ApplicationHelper.f_label t(:password_confirmation)%><br>
 			<%= f.password_field :password_confirmation, class: "form-control", style: "width: 250px;", placeholder: t(:password_confirmation) %>
 		</div>
-		
+
 		<%= f.submit class: "btn btn-default btn-primary", style: "width:250px;" %>
 
 	<% end %>

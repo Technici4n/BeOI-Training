@@ -24,6 +24,7 @@ en:
     username: "Username"
     uva: "UVa Onlinejudge username"
     codeforces: "Codeforces handle"
+    slack: "Slack username or user ID"
     display_name: "Displayed name"
     initials: "Initials"
     email: "Email address"
