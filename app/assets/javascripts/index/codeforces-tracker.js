@@ -7,7 +7,7 @@ var CodeforcesTracker = (function()
 	}
     else
 	{
-		var codeforces_user_submissions_url = "http://codeforces.com/api/user.status?handle={0}&jsonp=?";
+		var codeforces_user_submissions_url = "http://codeforces.com/api/user.status?handle={0}";
 		var codeforces_all_problems_url = "http://codeforces.com/api/problemset.problems?jsonp=?";
 	}
 	var codeforces_problem_url = "http://codeforces.com/problemset/problem/{0}/{1}";
@@ -74,9 +74,13 @@ var CodeforcesTracker = (function()
 			// Update user's timestamp
 			sorted_data[i][0] = Math.floor(Date.now() / 1000);
 		}
-		// Just update submissions and user data
-		$.when.apply($, update_requests).done(function()
-		{
+
+		$.when.apply($, $.map(update_requests, function(req) {
+			var d = $.Deferred();
+			// Make sure the promise resolves even for failed requests (e.g. when the handle is incorrect)
+			req.always(function() { d.resolve(); });
+			return d.promise();
+		})).done(function() {
 			// Save result
 			localStorage["codeforces_submissions"] = JSON.stringify(problems_by_user);
 			localStorage["codeforces_user_updates"] = JSON.stringify(sorted_data);
