@@ -22,3 +22,4 @@
 
 # Ignore the dev ENV variables
 /config/local_env.yml
+/vend[oe]r
