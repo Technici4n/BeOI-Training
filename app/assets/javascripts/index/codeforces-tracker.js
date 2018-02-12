@@ -153,7 +153,6 @@ var CodeforcesTracker = (function() {
 				return null;
 		}
 	};
-	return ret;
 })();
 
 $(function() {
