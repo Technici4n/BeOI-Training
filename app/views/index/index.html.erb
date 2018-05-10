@@ -36,20 +36,22 @@
 		<strong>Last submissions</strong>
 	</div>
 	<div class="panel-body" style="overflow: auto;">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>User</th>
-					<th>Problem</th>
-					<th>Verdict</th>
-					<th>Language</th>
-					<th>Time</th>
-					<th>Submit Time</th>
-				</tr>
-			</thead>
-			<tbody id="lastsubmissions">
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>User</th>
+						<th>Problem</th>
+						<th>Verdict</th>
+						<th>Language</th>
+						<th>Time</th>
+						<th>Submit Time</th>
+					</tr>
+				</thead>
+				<tbody id="lastsubmissions">
+				</tbody>
+			</table>
+		</div>
 		<center><button onclick="UvaTracker.append_submissions(20);" class="btn btn-lg btn-primary btn-gray" style="margin: 0 0 10px 0;">Show 20 More</button>
 	</div>
 </div>
