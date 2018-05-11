@@ -200,18 +200,21 @@ class SubjectsController < ApplicationController
 
 
 			post.body = <<-BODY.gsub(/\s+/, " ")
-				{"attachments": [
-					{
-						"title": "#{escape_string(title)}",
-						"title_link": "#{ENV['APP_URL']}/subjects/#{subject.id}",
-						"text": "#{escape_string(attachment_text)}",
-						"author_name": "#{escape_string(message.user.display_name)}",
-						"color": "#{color}"
-						#{if channel != nil then
-							", \"channel\": \"#{escape_string(channel)}\""
-						end}
-					}
-				]}
+				{
+					"attachments":
+					[
+						{
+							"title": "#{escape_string(title)}",
+							"title_link": "#{ENV['APP_URL']}/subjects/#{subject.id}",
+							"text": "#{escape_string(attachment_text)}",
+							"author_name": "#{escape_string(message.user.display_name)}",
+							"color": "#{color}"
+						}
+					]
+				#{if channel != nil then
+					", \"channel\": \"#{escape_string(channel)}\""
+				end}
+				}
 			BODY
 			post['Content-Type'] = 'application/json'
 			http.request(post)
